@@ -1,4 +1,5 @@
----
+﻿---
+export const prerender = true;
 import BaseLayout from '../../../components/layout/BaseLayout.astro';
 import ExpertiseGrid from '../../../components/sections/ExpertiseGrid.astro';
 
@@ -16,6 +17,7 @@ const schema = {
   isPartOf: { '@id': 'https://www.core-attorneys.com/#organization' },
 };
 ---
+export const prerender = true;
 
 <BaseLayout
   title="Expertise | CORE Attorneys"

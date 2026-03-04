@@ -1,4 +1,5 @@
----
+﻿---
+export const prerender = true;
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../../components/layout/BaseLayout.astro';
 import NewsCard from '../../../components/cards/NewsCard.astro';
@@ -12,6 +13,7 @@ const publishedPosts = allPosts
   .filter((p) => !p.data.draft)
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 ---
+export const prerender = true;
 
 <BaseLayout
   title="News & Insights | CORE Attorneys"

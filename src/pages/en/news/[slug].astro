@@ -1,4 +1,5 @@
----
+﻿---
+export const prerender = true;
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../../components/layout/BaseLayout.astro';
 import { formatDate } from '../../../utils/i18n';
@@ -41,6 +42,7 @@ const articleSchema = {
 
 const formattedDate = formatDate(post.data.pubDate, locale);
 ---
+export const prerender = true;
 
 <BaseLayout
   title={post.data.title}
