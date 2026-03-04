@@ -1,5 +1,21 @@
 /* CORE Attorneys – Global Styles */
 
+/* Tailwind v4 */
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+/* Brand theme */
+@theme {
+  --color-accent: #f8b500;
+  --color-accent-dark: #d69e00;
+  --color-text: #333333;
+  --color-bg-light: #eeeeee;
+  --color-bg-dark: #5c636e;
+  --color-bg-darker: #444b54;
+  --font-sans: 'Spinnaker', system-ui, sans-serif;
+  --font-heading: 'Arimo', system-ui, sans-serif;
+}
+
 /* Self-hosted fonts */
 @font-face {
   font-family: 'Spinnaker';
