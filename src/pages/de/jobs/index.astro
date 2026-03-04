@@ -1,0 +1,117 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../../components/layout/BaseLayout.astro';
+import JobCard from '../../../components/cards/JobCard.astro';
+
+const locale = 'de';
+const canonicalUrl = 'https://www.core-attorneys.com/de/jobs/';
+const alternateUrl = 'https://www.core-attorneys.com/en/jobs/';
+
+const allJobs = await getCollection('jobs_de');
+const activeJobs = allJobs
+  .filter((j) => j.data.isActive)
+  .sort((a, b) => b.data.postedDate.valueOf() - a.data.postedDate.valueOf());
+
+const jobsSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebPage',
+  url: canonicalUrl,
+  name: 'Offene Stellen – CORE Attorneys',
+  inLanguage: 'de-CH',
+};
+---
+
+<BaseLayout
+  title="Offene Stellen | CORE Attorneys"
+  description="Karriere bei CORE Attorneys – offene Stellen und Initiativbewerbungen für Juristinnen und Juristen in der Schweizer Boutique-Kanzlei."
+  locale={locale}
+  canonicalUrl={canonicalUrl}
+  alternateUrl={alternateUrl}
+  schemas={[jobsSchema]}
+>
+  <div class="py-12 bg-bg-light border-b border-bg-light">
+    <div class="container">
+      <nav aria-label="Brotkrümelpfad" class="mb-4">
+        <ol class="flex items-center gap-2 text-sm font-sans text-text/50 list-none m-0 p-0">
+          <li><a href="/de/" class="hover:text-accent transition-colors">Startseite</a></li>
+          <li aria-hidden="true" class="text-text/30">/</li>
+          <li class="text-text" aria-current="page">Jobs</li>
+        </ol>
+      </nav>
+      <h1 class="font-heading font-bold text-text" style="font-size: clamp(32px, 5vw, 48px);">
+        Offene Stellen
+      </h1>
+      <p class="font-sans text-lg text-text/60 mt-3 max-w-2xl">
+        Werden Sie Teil von CORE Attorneys – einer unabhängigen Schweizer Boutique-Kanzlei mit Spezialisierung auf Wettbewerbsrecht und Regulierung.
+      </p>
+    </div>
+  </div>
+
+  <section class="py-16 lg:py-20">
+    <div class="container">
+      <!-- Intro text -->
+      <div class="max-w-3xl mb-12">
+        <p class="font-sans text-lg text-text/80 leading-relaxed">
+          Wir suchen engagierte Juristinnen und Juristen, die in einem spezialisierten und dynamischen Umfeld arbeiten möchten. Bei CORE Attorneys erwartet Sie ein kollegiales Team, anspruchsvolle Mandate und die Möglichkeit zur persönlichen und fachlichen Weiterentwicklung.
+        </p>
+      </div>
+
+      {activeJobs.length > 0 ? (
+        <div class="space-y-4">
+          <h2 class="font-heading font-semibold text-2xl text-text mb-6">
+            Aktuelle Ausschreibungen
+          </h2>
+          <ul class="space-y-4 list-none m-0 p-0" role="list">
+            {activeJobs.map((job) => (
+              <li>
+                <JobCard
+                  locale={locale}
+                  title={job.data.title}
+                  description={job.data.description}
+                  location={job.data.location}
+                  type={job.data.type}
+                  postedDate={job.data.postedDate}
+                  applyEmail={job.data.applyEmail}
+                  slug={job.slug.split('/').pop() ?? job.slug}
+                />
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : (
+        <div class="bg-bg-light border border-bg-light rounded-sm p-8 max-w-2xl">
+          <p class="font-sans text-text/70 mb-4">
+            Aktuell haben wir keine offenen Stellen ausgeschrieben. Wir freuen uns aber jederzeit über Initiativbewerbungen von qualifizierten Juristinnen und Juristen.
+          </p>
+          <a
+            href="mailto:info@core-attorneys.com?subject=Initiativbewerbung"
+            class="btn-accent"
+          >
+            Initiativbewerbung senden
+          </a>
+        </div>
+      )}
+
+      <!-- Initiative application section -->
+      <div class="mt-12 pt-12 border-t border-bg-light">
+        <h2 class="font-heading font-semibold text-2xl text-text mb-4">
+          Initiativbewerbung
+        </h2>
+        <p class="font-sans text-text/70 mb-6 max-w-2xl">
+          Auch wenn keine passende Stelle ausgeschrieben ist: Wir freuen uns über Ihre Initiativbewerbung. Senden Sie uns Ihre Unterlagen direkt per E-Mail.
+        </p>
+        <div class="flex flex-wrap gap-4">
+          <a
+            href="mailto:info@core-attorneys.com?subject=Initiativbewerbung"
+            class="btn-accent"
+          >
+            Bewerbung per E-Mail senden
+          </a>
+          <a href="/de/team/" class="btn-outline">
+            Team kennenlernen
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,47 @@
+---
+import BaseLayout from '../../../components/layout/BaseLayout.astro';
+import ExpertiseGrid from '../../../components/sections/ExpertiseGrid.astro';
+
+const locale = 'en';
+const canonicalUrl = 'https://www.core-attorneys.com/en/expertise/';
+const alternateUrl = 'https://www.core-attorneys.com/de/expertise/';
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebPage',
+  url: canonicalUrl,
+  name: 'Expertise – CORE Attorneys',
+  description: 'Our practice areas: Competition law, regulatory matters, distribution law, e-commerce, compliance and internal investigations.',
+  inLanguage: 'en',
+  isPartOf: { '@id': 'https://www.core-attorneys.com/#organization' },
+};
+---
+
+<BaseLayout
+  title="Expertise | CORE Attorneys"
+  description="Our practice areas: Competition law & antitrust, regulatory matters, distribution law & commercial matters, e-commerce & digital economy, compliance and internal investigations."
+  locale={locale}
+  canonicalUrl={canonicalUrl}
+  alternateUrl={alternateUrl}
+  schemas={[schema]}
+>
+  <div class="py-12 bg-bg-light border-b border-bg-light">
+    <div class="container">
+      <nav aria-label="Breadcrumb" class="mb-4">
+        <ol class="flex items-center gap-2 text-sm font-sans text-text/50 list-none m-0 p-0">
+          <li><a href="/en/" class="hover:text-accent transition-colors">Home</a></li>
+          <li aria-hidden="true" class="text-text/30">/</li>
+          <li class="text-text" aria-current="page">Expertise</li>
+        </ol>
+      </nav>
+      <h1 class="font-heading font-bold text-text" style="font-size: clamp(32px, 5vw, 48px);">
+        Our Expertise
+      </h1>
+      <p class="font-sans text-lg text-text/60 mt-3 max-w-2xl">
+        Specialised counsel in regulated markets – from competition and antitrust law to regulatory matters, distribution law and compliance.
+      </p>
+    </div>
+  </div>
+
+  <ExpertiseGrid locale={locale} />
+</BaseLayout>

@@ -1,0 +1,94 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../../components/layout/BaseLayout.astro';
+
+export async function getStaticPaths() {
+  const expertise = await getCollection('expertise_en');
+  return expertise.map((item) => ({
+    params: { slug: item.slug.split('/').pop() ?? item.slug },
+    props: { item },
+  }));
+}
+
+const { item } = Astro.props;
+const { Content } = await item.render();
+
+const locale = 'en';
+const slug = item.slug.split('/').pop() ?? item.slug;
+const canonicalUrl = `https://www.core-attorneys.com/en/expertise/${slug}/`;
+const alternateUrl = `https://www.core-attorneys.com/de/expertise/${slug}/`;
+
+const serviceSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  name: item.data.title,
+  description: item.data.description,
+  provider: { '@id': 'https://www.core-attorneys.com/#organization' },
+  serviceType: item.data.title,
+  url: canonicalUrl,
+};
+---
+
+<BaseLayout
+  title={`${item.data.title} | CORE Attorneys`}
+  description={item.data.description}
+  locale={locale}
+  canonicalUrl={canonicalUrl}
+  alternateUrl={alternateUrl}
+  schemas={[serviceSchema]}
+>
+  <div class="py-12 bg-bg-light border-b border-bg-light">
+    <div class="container">
+      <nav aria-label="Breadcrumb" class="mb-4">
+        <ol class="flex items-center gap-2 text-sm font-sans text-text/50 list-none m-0 p-0">
+          <li><a href="/en/" class="hover:text-accent transition-colors">Home</a></li>
+          <li aria-hidden="true" class="text-text/30">/</li>
+          <li><a href="/en/expertise/" class="hover:text-accent transition-colors">Expertise</a></li>
+          <li aria-hidden="true" class="text-text/30">/</li>
+          <li class="text-text" aria-current="page">{item.data.title}</li>
+        </ol>
+      </nav>
+      <div class="w-12 h-1 bg-accent mb-4" aria-hidden="true"></div>
+      <h1 class="font-heading font-bold text-text" style="font-size: clamp(32px, 5vw, 48px);">
+        {item.data.title}
+      </h1>
+      <p class="font-sans text-lg text-text/60 mt-3 max-w-3xl">
+        {item.data.summary}
+      </p>
+    </div>
+  </div>
+
+  <div class="py-16 lg:py-20">
+    <div class="container">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+        <div class="lg:col-span-2">
+          <div class="prose prose-lg max-w-none
+            prose-headings:font-heading prose-headings:text-text
+            prose-a:text-accent prose-a:no-underline hover:prose-a:underline
+            prose-strong:text-text">
+            <Content />
+          </div>
+        </div>
+        <aside class="space-y-6">
+          <div class="bg-bg-light p-6 border-l-4 border-accent">
+            <h2 class="font-heading font-semibold text-lg text-text mb-3">
+              Request a consultation
+            </h2>
+            <p class="font-sans text-sm text-text/70 mb-4">
+              Questions about this area? Contact us directly.
+            </p>
+            <a href="/en/contact/" class="btn-accent text-sm">Contact us</a>
+          </div>
+          <div class="bg-white border border-bg-light p-6">
+            <h2 class="font-heading font-semibold text-base text-text mb-3">
+              Other areas
+            </h2>
+            <a href="/en/expertise/" class="text-sm font-heading font-semibold text-accent hover:underline">
+              All practice areas →
+            </a>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </div>
+</BaseLayout>

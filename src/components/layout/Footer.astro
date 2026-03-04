@@ -1,0 +1,145 @@
+---
+import type { Locale } from '../../utils/i18n';
+import { useTranslations, getLocalizedUrl, replacePlaceholders } from '../../utils/i18n';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+const year = new Date().getFullYear();
+const copyright = replacePlaceholders(t.footer.copyright, { year });
+---
+
+<footer class="bg-bg-dark text-white" role="contentinfo">
+  <div class="container py-12 lg:py-16">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
+
+      <!-- Brand & Contact -->
+      <div class="lg:col-span-2">
+        <a
+          href={`/${locale}/`}
+          class="inline-block mb-4 focus-visible:outline-2 focus-visible:outline-accent rounded-sm"
+          aria-label="CORE Attorneys – Zur Startseite"
+        >
+          <img
+            src="/images/logo-white.svg"
+            alt="CORE Attorneys"
+            width="160"
+            height="36"
+            class="h-9 w-auto"
+            loading="lazy"
+          />
+        </a>
+
+        <address class="not-italic space-y-2 text-white/80 font-sans text-sm mt-4">
+          <p>{t.footer.address}</p>
+          <p>
+            <a
+              href="tel:+41435557000"
+              class="hover:text-accent transition-colors text-white/80"
+            >
+              {t.footer.phone}
+            </a>
+          </p>
+          <p>
+            <a
+              href="mailto:info@core-attorneys.com"
+              class="hover:text-accent transition-colors text-white/80"
+            >
+              {t.footer.email}
+            </a>
+          </p>
+          <p class="text-white/50 text-xs pt-2">UID: {t.footer.uid}</p>
+        </address>
+
+        <!-- LinkedIn -->
+        <a
+          href="https://www.linkedin.com/company/core-attorneys"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center gap-2 mt-5 text-sm text-white/70 hover:text-accent transition-colors"
+          aria-label={`${t.footer.linkedin} ${t.aria.externalLink}`}
+        >
+          <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+          </svg>
+          LinkedIn
+        </a>
+      </div>
+
+      <!-- Navigation -->
+      <nav aria-label={t.aria.footerNav} class="space-y-4">
+        <h2 class="font-heading font-semibold text-sm text-white uppercase tracking-wider">
+          {locale === 'de' ? 'Navigation' : 'Navigation'}
+        </h2>
+        <ul class="space-y-2 list-none m-0 p-0" role="list">
+          {[
+            { label: t.nav.expertise, href: getLocalizedUrl(locale, '/expertise/') },
+            { label: t.nav.team, href: getLocalizedUrl(locale, '/team/') },
+            { label: t.nav.news, href: getLocalizedUrl(locale, '/news/') },
+            { label: t.nav.jobs, href: getLocalizedUrl(locale, '/jobs/') },
+            { label: t.nav.contact, href: getLocalizedUrl(locale, locale === 'de' ? '/kontakt/' : '/contact/') },
+          ].map((link) => (
+            <li>
+              <a
+                href={link.href}
+                class="text-sm text-white/70 hover:text-accent transition-colors font-sans"
+              >
+                {link.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+
+      <!-- Legal Links -->
+      <nav aria-label={locale === 'de' ? 'Rechtliche Links' : 'Legal links'} class="space-y-4">
+        <h2 class="font-heading font-semibold text-sm text-white uppercase tracking-wider">
+          {locale === 'de' ? 'Rechtliches' : 'Legal'}
+        </h2>
+        <ul class="space-y-2 list-none m-0 p-0" role="list">
+          <li>
+            <a
+              href={getLocalizedUrl(locale, locale === 'de' ? '/impressum/' : '/imprint/')}
+              class="text-sm text-white/70 hover:text-accent transition-colors font-sans"
+            >
+              {t.footer.imprint}
+            </a>
+          </li>
+          <li>
+            <a
+              href={getLocalizedUrl(locale, locale === 'de' ? '/datenschutz/' : '/privacy/')}
+              class="text-sm text-white/70 hover:text-accent transition-colors font-sans"
+            >
+              {t.footer.privacy}
+            </a>
+          </li>
+          <li>
+            <a
+              href={getLocalizedUrl(locale, locale === 'de' ? '/nutzungsbedingungen/' : '/terms/')}
+              class="text-sm text-white/70 hover:text-accent transition-colors font-sans"
+            >
+              {t.footer.terms}
+            </a>
+          </li>
+        </ul>
+      </nav>
+
+    </div>
+
+    <!-- Bottom bar -->
+    <div class="mt-10 pt-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <p class="text-xs text-white/40 font-sans">{copyright}</p>
+      <!-- Back to top -->
+      <a
+        href="#top"
+        class="text-xs text-white/40 hover:text-accent transition-colors font-sans flex items-center gap-1"
+        aria-label={t.aria.backToTop}
+      >
+        ↑ {t.aria.backToTop}
+      </a>
+    </div>
+  </div>
+</footer>

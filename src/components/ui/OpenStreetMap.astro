@@ -1,0 +1,96 @@
+---
+import type { Locale } from '../../utils/i18n';
+import { useTranslations } from '../../utils/i18n';
+
+interface Props {
+  locale: Locale;
+  lat?: number;
+  lon?: number;
+  zoom?: number;
+  label?: string;
+}
+
+const {
+  locale,
+  lat = 47.3645,
+  lon = 8.5532,
+  zoom = 16,
+  label,
+} = Astro.props;
+
+const t = useTranslations(locale);
+const mapLabel = label ?? t.contact.mapLabel;
+
+// OpenStreetMap embed URL (privacy: only loaded on user click)
+const osmUrl = `https://www.openstreetmap.org/export/embed.html?bbox=${lon - 0.005},${lat - 0.003},${lon + 0.005},${lat + 0.003}&layer=mapnik&marker=${lat},${lon}`;
+const osmLink = `https://www.openstreetmap.org/?mlat=${lat}&mlon=${lon}#map=${zoom}/${lat}/${lon}`;
+---
+
+<div class="osm-wrapper" data-osm-url={osmUrl} data-osm-label={mapLabel}>
+  <!-- Consent placeholder – shown before the map is loaded -->
+  <div
+    id="osm-consent"
+    class="flex flex-col items-center justify-center gap-4 bg-bg-light border border-bg-light rounded-sm p-10 text-center min-h-[300px]"
+    role="region"
+    aria-label={mapLabel}
+  >
+    <svg aria-hidden="true" class="w-12 h-12 text-text/30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/>
+    </svg>
+    <p class="font-sans text-sm text-text/60 max-w-sm">
+      {t.contact.mapConsentNote}
+    </p>
+    <button
+      id="osm-load-btn"
+      type="button"
+      class="btn-accent text-sm"
+      aria-describedby="osm-note"
+    >
+      {t.contact.mapConsent}
+    </button>
+    <p id="osm-note" class="sr-only">{t.contact.mapConsentNote}</p>
+
+    <!-- Direct link as fallback -->
+    <a
+      href={osmLink}
+      target="_blank"
+      rel="noopener noreferrer"
+      class="text-xs font-sans text-accent hover:underline"
+      aria-label={`${mapLabel} – OpenStreetMap ${t.aria.externalLink}`}
+    >
+      {locale === 'de' ? 'Auf OpenStreetMap öffnen' : 'Open on OpenStreetMap'}
+    </a>
+  </div>
+
+  <!-- Map container (hidden until consent given) -->
+  <div id="osm-map" class="hidden" style="min-height: 300px;">
+    <!-- iframe will be injected here -->
+  </div>
+</div>
+
+<script>
+  const btn = document.getElementById('osm-load-btn');
+  const consent = document.getElementById('osm-consent');
+  const mapContainer = document.getElementById('osm-map');
+  const wrapper = document.querySelector('.osm-wrapper') as HTMLElement | null;
+
+  btn?.addEventListener('click', () => {
+    const osmUrl = wrapper?.dataset.osmUrl;
+    const osmLabel = wrapper?.dataset.osmLabel ?? 'Map';
+    if (!osmUrl || !mapContainer) return;
+
+    const iframe = document.createElement('iframe');
+    iframe.src = osmUrl;
+    iframe.width = '100%';
+    iframe.height = '400';
+    iframe.style.border = 'none';
+    iframe.title = osmLabel;
+    iframe.loading = 'lazy';
+    iframe.setAttribute('allowfullscreen', '');
+    iframe.setAttribute('aria-label', osmLabel);
+
+    mapContainer.appendChild(iframe);
+    mapContainer.classList.remove('hidden');
+    consent?.classList.add('hidden');
+  });
+</script>

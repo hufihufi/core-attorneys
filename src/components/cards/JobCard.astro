@@ -1,0 +1,56 @@
+---
+import type { Locale } from '../../utils/i18n';
+import { useTranslations, formatDate } from '../../utils/i18n';
+
+interface Props {
+  locale: Locale;
+  title: string;
+  description: string;
+  location: string;
+  type: string;
+  postedDate: Date;
+  applyEmail: string;
+  slug: string;
+}
+
+const { locale, title, description, location, type, postedDate, applyEmail, slug } = Astro.props;
+const t = useTranslations(locale);
+const formattedDate = formatDate(postedDate, locale);
+---
+
+<article class="bg-white border border-bg-light hover:border-accent transition-colors duration-200 rounded-sm p-6">
+  <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-4">
+    <div>
+      <h3 class="font-heading font-bold text-xl text-text mb-2">{title}</h3>
+      <div class="flex flex-wrap gap-3 text-sm font-sans text-text/60">
+        <span class="flex items-center gap-1">
+          <svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+          </svg>
+          {location}
+        </span>
+        <span class="flex items-center gap-1">
+          <svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+          {type}
+        </span>
+        <span>
+          <time datetime={postedDate.toISOString()}>
+            {t.jobs.posted}: {formattedDate}
+          </time>
+        </span>
+      </div>
+    </div>
+    <a
+      href={`mailto:${applyEmail}?subject=${encodeURIComponent(title)}`}
+      class="btn-accent text-sm flex-shrink-0"
+      aria-label={`${t.jobs.applyNow}: ${title}`}
+    >
+      {t.jobs.applyNow}
+    </a>
+  </div>
+
+  <p class="font-sans text-sm text-text/70 leading-relaxed">{description}</p>
+</article>

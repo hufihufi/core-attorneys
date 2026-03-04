@@ -1,0 +1,64 @@
+---
+import BaseLayout from '../../../components/layout/BaseLayout.astro';
+
+const locale = 'de';
+const canonicalUrl = 'https://www.core-attorneys.com/de/nutzungsbedingungen/';
+const alternateUrl = 'https://www.core-attorneys.com/en/terms/';
+---
+
+<BaseLayout
+  title="Nutzungsbedingungen | CORE Attorneys"
+  description="Nutzungsbedingungen der Website von CORE Attorneys AG, Zürich."
+  locale={locale}
+  canonicalUrl={canonicalUrl}
+  alternateUrl={alternateUrl}
+  noindex={true}
+>
+  <div class="py-12 bg-bg-light border-b border-bg-light">
+    <div class="container">
+      <nav aria-label="Brotkrümelpfad" class="mb-4">
+        <ol class="flex items-center gap-2 text-sm font-sans text-text/50 list-none m-0 p-0">
+          <li><a href="/de/" class="hover:text-accent transition-colors">Startseite</a></li>
+          <li aria-hidden="true" class="text-text/30">/</li>
+          <li class="text-text" aria-current="page">Nutzungsbedingungen</li>
+        </ol>
+      </nav>
+      <h1 class="font-heading font-bold text-text" style="font-size: clamp(32px, 5vw, 48px);">
+        Nutzungsbedingungen
+      </h1>
+    </div>
+  </div>
+
+  <article class="py-16">
+    <div class="container max-w-3xl">
+      <div class="prose prose-lg max-w-none prose-headings:font-heading prose-headings:text-text prose-a:text-accent">
+
+        <h2>1. Geltungsbereich</h2>
+        <p>
+          Diese Nutzungsbedingungen gelten für alle Nutzerinnen und Nutzer der Website www.core-attorneys.com. Mit dem Zugriff auf die Website stimmen Sie diesen Bedingungen zu.
+        </p>
+
+        <h2>2. Inhalt der Website</h2>
+        <p>
+          Die auf dieser Website enthaltenen Informationen dienen ausschliesslich allgemeinen Informationszwecken und stellen keine Rechtsberatung dar. CORE Attorneys AG übernimmt keine Gewähr für die Richtigkeit, Vollständigkeit oder Aktualität der bereitgestellten Informationen.
+        </p>
+
+        <h2>3. Haftungsbeschränkung</h2>
+        <p>
+          CORE Attorneys AG haftet nicht für Schäden, die aus der Nutzung oder der Nichtnutzbarkeit dieser Website entstehen. Links zu externen Websites werden ohne Überprüfung bereitgestellt; für deren Inhalte übernimmt CORE Attorneys AG keine Verantwortung.
+        </p>
+
+        <h2>4. Urheberrecht</h2>
+        <p>
+          Alle Inhalte dieser Website (Texte, Bilder, Grafiken, Logos) sind urheberrechtlich geschützt und Eigentum von CORE Attorneys AG oder der jeweiligen Rechteinhaber. Jede Nutzung ohne ausdrückliche Genehmigung ist untersagt.
+        </p>
+
+        <h2>5. Anwendbares Recht und Gerichtsstand</h2>
+        <p>
+          Diese Nutzungsbedingungen unterliegen schweizerischem Recht. Gerichtsstand ist Zürich, Schweiz.
+        </p>
+
+      </div>
+    </div>
+  </article>
+</BaseLayout>

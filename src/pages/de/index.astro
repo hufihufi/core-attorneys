@@ -1,0 +1,41 @@
+---
+import BaseLayout from '../../components/layout/BaseLayout.astro';
+import Hero from '../../components/sections/Hero.astro';
+import ExpertiseGrid from '../../components/sections/ExpertiseGrid.astro';
+import AboutSection from '../../components/sections/AboutSection.astro';
+import TeamPreview from '../../components/sections/TeamPreview.astro';
+import NewsPreview from '../../components/sections/NewsPreview.astro';
+import LinkedInFeed from '../../components/sections/LinkedInFeed.astro';
+
+const locale = 'de';
+const canonicalUrl = 'https://www.core-attorneys.com/de/';
+const alternateUrl = 'https://www.core-attorneys.com/en/';
+
+const homepageSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebPage',
+  '@id': canonicalUrl,
+  url: canonicalUrl,
+  name: 'CORE Attorneys – Wettbewerbsrecht, Regulierung, Vertriebsrecht',
+  description:
+    'CORE Attorneys ist eine unabhängige Schweizer Boutique-Kanzlei, spezialisiert auf Wettbewerbsrecht, Regulierung und Vertriebsrecht in Zürich.',
+  inLanguage: 'de-CH',
+  isPartOf: { '@id': 'https://www.core-attorneys.com/#organization' },
+};
+---
+
+<BaseLayout
+  title="CORE Attorneys – Wettbewerbsrecht & Regulierung, Zürich"
+  description="CORE Attorneys ist eine unabhängige Schweizer Boutique-Kanzlei, spezialisiert auf Wettbewerbsrecht, Regulierung und Vertriebsrecht in Zürich."
+  locale={locale}
+  canonicalUrl={canonicalUrl}
+  alternateUrl={alternateUrl}
+  schemas={[homepageSchema]}
+>
+  <Hero locale={locale} />
+  <ExpertiseGrid locale={locale} featured={true} />
+  <AboutSection locale={locale} />
+  <TeamPreview locale={locale} limit={4} />
+  <NewsPreview locale={locale} limit={3} />
+  <LinkedInFeed locale={locale} />
+</BaseLayout>

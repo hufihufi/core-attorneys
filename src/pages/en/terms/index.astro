@@ -1,0 +1,64 @@
+---
+import BaseLayout from '../../../components/layout/BaseLayout.astro';
+
+const locale = 'en';
+const canonicalUrl = 'https://www.core-attorneys.com/en/terms/';
+const alternateUrl = 'https://www.core-attorneys.com/de/nutzungsbedingungen/';
+---
+
+<BaseLayout
+  title="Terms of Use | CORE Attorneys"
+  description="Terms of use for the CORE Attorneys AG website, Zurich."
+  locale={locale}
+  canonicalUrl={canonicalUrl}
+  alternateUrl={alternateUrl}
+  noindex={true}
+>
+  <div class="py-12 bg-bg-light border-b border-bg-light">
+    <div class="container">
+      <nav aria-label="Breadcrumb" class="mb-4">
+        <ol class="flex items-center gap-2 text-sm font-sans text-text/50 list-none m-0 p-0">
+          <li><a href="/en/" class="hover:text-accent transition-colors">Home</a></li>
+          <li aria-hidden="true" class="text-text/30">/</li>
+          <li class="text-text" aria-current="page">Terms of Use</li>
+        </ol>
+      </nav>
+      <h1 class="font-heading font-bold text-text" style="font-size: clamp(32px, 5vw, 48px);">
+        Terms of Use
+      </h1>
+    </div>
+  </div>
+
+  <article class="py-16">
+    <div class="container max-w-3xl">
+      <div class="prose prose-lg max-w-none prose-headings:font-heading prose-headings:text-text prose-a:text-accent">
+
+        <h2>1. Scope</h2>
+        <p>
+          These terms of use apply to all users of the website www.core-attorneys.com. By accessing the website, you agree to these terms.
+        </p>
+
+        <h2>2. Website content</h2>
+        <p>
+          The information contained on this website is for general informational purposes only and does not constitute legal advice. CORE Attorneys AG makes no warranty as to the accuracy, completeness or currency of the information provided.
+        </p>
+
+        <h2>3. Limitation of liability</h2>
+        <p>
+          CORE Attorneys AG is not liable for damages arising from the use or inability to use this website. Links to external websites are provided without review; CORE Attorneys AG accepts no responsibility for their content.
+        </p>
+
+        <h2>4. Copyright</h2>
+        <p>
+          All content on this website (texts, images, graphics, logos) is protected by copyright and is the property of CORE Attorneys AG or the respective rights holders. Any use without express permission is prohibited.
+        </p>
+
+        <h2>5. Applicable law and jurisdiction</h2>
+        <p>
+          These terms of use are governed by Swiss law. Jurisdiction is Zurich, Switzerland.
+        </p>
+
+      </div>
+    </div>
+  </article>
+</BaseLayout>

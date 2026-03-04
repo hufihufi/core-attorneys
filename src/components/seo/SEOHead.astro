@@ -1,0 +1,114 @@
+---
+import type { Locale } from '../../utils/i18n';
+import { useTranslations, getHreflang } from '../../utils/i18n';
+import HreflangLinks from './HreflangLinks.astro';
+
+interface Props {
+  title: string;
+  description?: string;
+  locale: Locale;
+  canonicalUrl: string;
+  alternateUrl?: string;
+  ogImage?: string;
+  ogType?: 'website' | 'article';
+  publishedTime?: string;
+  modifiedTime?: string;
+  noindex?: boolean;
+}
+
+const {
+  title,
+  description,
+  locale,
+  canonicalUrl,
+  alternateUrl,
+  ogImage,
+  ogType = 'website',
+  publishedTime,
+  modifiedTime,
+  noindex = false,
+} = Astro.props;
+
+const t = useTranslations(locale);
+const resolvedDescription = description ?? t.meta.defaultDescription;
+const resolvedOgImage = ogImage
+  ? `https://www.core-attorneys.com${ogImage}`
+  : `https://www.core-attorneys.com${t.meta.ogImage}`;
+
+const fullTitle = title === t.meta.siteName
+  ? title
+  : `${title} | ${t.meta.siteName}`;
+---
+
+<!-- Primary meta -->
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>{fullTitle}</title>
+<meta name="description" content={resolvedDescription} />
+{noindex && <meta name="robots" content="noindex, nofollow" />}
+
+<!-- Canonical & hreflang -->
+<link rel="canonical" href={canonicalUrl} />
+<HreflangLinks
+  canonicalUrl={canonicalUrl}
+  alternateUrl={alternateUrl}
+  locale={locale}
+/>
+
+<!-- Open Graph -->
+<meta property="og:type" content={ogType} />
+<meta property="og:title" content={fullTitle} />
+<meta property="og:description" content={resolvedDescription} />
+<meta property="og:url" content={canonicalUrl} />
+<meta property="og:image" content={resolvedOgImage} />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:site_name" content={t.meta.siteName} />
+<meta property="og:locale" content={getHreflang(locale).replace('-', '_')} />
+{ogType === 'article' && publishedTime && (
+  <meta property="article:published_time" content={publishedTime} />
+)}
+{ogType === 'article' && modifiedTime && (
+  <meta property="article:modified_time" content={modifiedTime} />
+)}
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={fullTitle} />
+<meta name="twitter:description" content={resolvedDescription} />
+<meta name="twitter:image" content={resolvedOgImage} />
+
+<!-- Fonts preload -->
+<link
+  rel="preload"
+  href="/fonts/spinnaker-regular.woff2"
+  as="font"
+  type="font/woff2"
+  crossorigin="anonymous"
+/>
+<link
+  rel="preload"
+  href="/fonts/arimo-variable.woff2"
+  as="font"
+  type="font/woff2"
+  crossorigin="anonymous"
+/>
+
+<!-- Favicon -->
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="icon" type="image/x-icon" href="/favicon.ico" />
+
+<!-- RSS Feed -->
+<link
+  rel="alternate"
+  type="application/rss+xml"
+  title={`${t.meta.siteName} – ${t.news.heading}`}
+  href="/rss.xml"
+/>
+
+<!-- Cloudflare Web Analytics -->
+<script
+  defer
+  src="https://static.cloudflareinsights.com/beacon.min.js"
+  data-cf-beacon='{"token": "YOUR_CF_ANALYTICS_TOKEN"}'
+></script>

@@ -1,0 +1,78 @@
+---
+import BaseLayout from '../../../components/layout/BaseLayout.astro';
+
+const locale = 'en';
+const canonicalUrl = 'https://www.core-attorneys.com/en/imprint/';
+const alternateUrl = 'https://www.core-attorneys.com/de/impressum/';
+---
+
+<BaseLayout
+  title="Imprint | CORE Attorneys"
+  description="Legal notice for CORE Attorneys AG, Dufourstrasse 105, CH-8008 Zurich."
+  locale={locale}
+  canonicalUrl={canonicalUrl}
+  alternateUrl={alternateUrl}
+  noindex={true}
+>
+  <div class="py-12 bg-bg-light border-b border-bg-light">
+    <div class="container">
+      <nav aria-label="Breadcrumb" class="mb-4">
+        <ol class="flex items-center gap-2 text-sm font-sans text-text/50 list-none m-0 p-0">
+          <li><a href="/en/" class="hover:text-accent transition-colors">Home</a></li>
+          <li aria-hidden="true" class="text-text/30">/</li>
+          <li class="text-text" aria-current="page">Imprint</li>
+        </ol>
+      </nav>
+      <h1 class="font-heading font-bold text-text" style="font-size: clamp(32px, 5vw, 48px);">
+        Imprint
+      </h1>
+    </div>
+  </div>
+
+  <article class="py-16">
+    <div class="container max-w-3xl">
+      <div class="prose prose-lg max-w-none prose-headings:font-heading prose-headings:text-text prose-a:text-accent">
+        <h2>Contact</h2>
+        <address class="not-italic">
+          <strong>CORE Attorneys AG</strong><br />
+          Dufourstrasse 105<br />
+          CH-8008 Zurich<br />
+          Switzerland<br /><br />
+          Phone: <a href="tel:+41435557000">+41 43 555 70 00</a><br />
+          Email: <a href="mailto:info@core-attorneys.com">info@core-attorneys.com</a>
+        </address>
+
+        <h2>Company</h2>
+        <p>
+          CORE Attorneys AG is a stock corporation (Aktiengesellschaft) incorporated under Swiss law.<br />
+          UID: CHE-381.202.187<br />
+          Commercial register number: [enter register number]
+        </p>
+
+        <h2>Professional title and regulations</h2>
+        <p>
+          The lawyers at CORE Attorneys AG are admitted to practise law under Swiss law and are subject to the Swiss Federal Act on the Legal Profession (BGFA) as well as the professional rules of the Swiss Bar Association (SAV).
+        </p>
+
+        <h2>Supervisory authority</h2>
+        <p>
+          Bar Association of the Canton of Zurich<br />
+          Law Commission of the Canton of Zurich
+        </p>
+
+        <h2>Disclaimer</h2>
+        <p>
+          The content of this website is for general informational purposes only and does not constitute legal advice. No guarantee is given as to the accuracy, completeness or currency of the content.
+        </p>
+
+        <h2>Copyright</h2>
+        <p>
+          All content on this website is protected by copyright. Reproduction, distribution or public communication without the express permission of CORE Attorneys AG is prohibited.
+        </p>
+
+        <h2>Responsible for content</h2>
+        <p>CORE Attorneys AG, Zurich</p>
+      </div>
+    </div>
+  </article>
+</BaseLayout>

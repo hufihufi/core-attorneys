@@ -1,0 +1,115 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../../components/layout/BaseLayout.astro';
+import JobCard from '../../../components/cards/JobCard.astro';
+
+const locale = 'en';
+const canonicalUrl = 'https://www.core-attorneys.com/en/jobs/';
+const alternateUrl = 'https://www.core-attorneys.com/de/jobs/';
+
+const allJobs = await getCollection('jobs_en');
+const activeJobs = allJobs
+  .filter((j) => j.data.isActive)
+  .sort((a, b) => b.data.postedDate.valueOf() - a.data.postedDate.valueOf());
+
+const jobsSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebPage',
+  url: canonicalUrl,
+  name: 'Open Positions – CORE Attorneys',
+  inLanguage: 'en',
+};
+---
+
+<BaseLayout
+  title="Open Positions | CORE Attorneys"
+  description="Careers at CORE Attorneys – open positions and unsolicited applications for lawyers at the Swiss boutique law firm."
+  locale={locale}
+  canonicalUrl={canonicalUrl}
+  alternateUrl={alternateUrl}
+  schemas={[jobsSchema]}
+>
+  <div class="py-12 bg-bg-light border-b border-bg-light">
+    <div class="container">
+      <nav aria-label="Breadcrumb" class="mb-4">
+        <ol class="flex items-center gap-2 text-sm font-sans text-text/50 list-none m-0 p-0">
+          <li><a href="/en/" class="hover:text-accent transition-colors">Home</a></li>
+          <li aria-hidden="true" class="text-text/30">/</li>
+          <li class="text-text" aria-current="page">Jobs</li>
+        </ol>
+      </nav>
+      <h1 class="font-heading font-bold text-text" style="font-size: clamp(32px, 5vw, 48px);">
+        Open Positions
+      </h1>
+      <p class="font-sans text-lg text-text/60 mt-3 max-w-2xl">
+        Join CORE Attorneys – an independent Swiss boutique law firm specialising in competition law and regulatory matters.
+      </p>
+    </div>
+  </div>
+
+  <section class="py-16 lg:py-20">
+    <div class="container">
+      <div class="max-w-3xl mb-12">
+        <p class="font-sans text-lg text-text/80 leading-relaxed">
+          We are looking for dedicated lawyers who wish to work in a specialised and dynamic environment. At CORE Attorneys, you can expect a collegial team, demanding mandates and the opportunity for personal and professional development.
+        </p>
+      </div>
+
+      {activeJobs.length > 0 ? (
+        <div class="space-y-4">
+          <h2 class="font-heading font-semibold text-2xl text-text mb-6">
+            Current openings
+          </h2>
+          <ul class="space-y-4 list-none m-0 p-0" role="list">
+            {activeJobs.map((job) => (
+              <li>
+                <JobCard
+                  locale={locale}
+                  title={job.data.title}
+                  description={job.data.description}
+                  location={job.data.location}
+                  type={job.data.type}
+                  postedDate={job.data.postedDate}
+                  applyEmail={job.data.applyEmail}
+                  slug={job.slug.split('/').pop() ?? job.slug}
+                />
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : (
+        <div class="bg-bg-light border border-bg-light rounded-sm p-8 max-w-2xl">
+          <p class="font-sans text-text/70 mb-4">
+            We have no open positions at the moment, but we welcome unsolicited applications from qualified lawyers at any time.
+          </p>
+          <a
+            href="mailto:info@core-attorneys.com?subject=Unsolicited Application"
+            class="btn-accent"
+          >
+            Send unsolicited application
+          </a>
+        </div>
+      )}
+
+      <div class="mt-12 pt-12 border-t border-bg-light">
+        <h2 class="font-heading font-semibold text-2xl text-text mb-4">
+          Unsolicited Application
+        </h2>
+        <p class="font-sans text-text/70 mb-6 max-w-2xl">
+          Even if no suitable position is advertised: we welcome your unsolicited application. Send your documents directly by email.
+        </p>
+        <div class="flex flex-wrap gap-4">
+          <a
+            href="mailto:info@core-attorneys.com?subject=Unsolicited Application"
+            class="btn-accent"
+          >
+            Send application by email
+          </a>
+          <a href="/en/team/" class="btn-outline">
+            Meet the team
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

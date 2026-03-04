@@ -1,0 +1,67 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../../components/layout/BaseLayout.astro';
+import NewsCard from '../../../components/cards/NewsCard.astro';
+
+const locale = 'en';
+const canonicalUrl = 'https://www.core-attorneys.com/en/news/';
+const alternateUrl = 'https://www.core-attorneys.com/de/news/';
+
+const allPosts = await getCollection('blog_en');
+const publishedPosts = allPosts
+  .filter((p) => !p.data.draft)
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+---
+
+<BaseLayout
+  title="News & Insights | CORE Attorneys"
+  description="Current articles on competition law, antitrust, regulatory matters and distribution law from CORE Attorneys Zurich."
+  locale={locale}
+  canonicalUrl={canonicalUrl}
+  alternateUrl={alternateUrl}
+>
+  <div class="py-12 bg-bg-light border-b border-bg-light">
+    <div class="container">
+      <nav aria-label="Breadcrumb" class="mb-4">
+        <ol class="flex items-center gap-2 text-sm font-sans text-text/50 list-none m-0 p-0">
+          <li><a href="/en/" class="hover:text-accent transition-colors">Home</a></li>
+          <li aria-hidden="true" class="text-text/30">/</li>
+          <li class="text-text" aria-current="page">News & Insights</li>
+        </ol>
+      </nav>
+      <h1 class="font-heading font-bold text-text" style="font-size: clamp(32px, 5vw, 48px);">
+        News & Insights
+      </h1>
+      <p class="font-sans text-lg text-text/60 mt-3 max-w-2xl">
+        Current developments and insights in competition law and regulatory matters.
+      </p>
+    </div>
+  </div>
+
+  <section class="py-16 lg:py-20" aria-label="All articles">
+    <div class="container">
+      {publishedPosts.length > 0 ? (
+        <ul
+          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 list-none m-0 p-0"
+          role="list"
+        >
+          {publishedPosts.map((post) => (
+            <li class="flex">
+              <NewsCard
+                locale={locale}
+                title={post.data.title}
+                description={post.data.description}
+                pubDate={post.data.pubDate}
+                slug={post.slug.split('/').pop() ?? post.slug}
+                tags={post.data.tags}
+                heroImage={post.data.heroImage}
+              />
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p class="font-sans text-text/60">No articles available.</p>
+      )}
+    </div>
+  </section>
+</BaseLayout>

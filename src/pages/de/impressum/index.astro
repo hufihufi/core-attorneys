@@ -1,0 +1,78 @@
+---
+import BaseLayout from '../../../components/layout/BaseLayout.astro';
+
+const locale = 'de';
+const canonicalUrl = 'https://www.core-attorneys.com/de/impressum/';
+const alternateUrl = 'https://www.core-attorneys.com/en/imprint/';
+---
+
+<BaseLayout
+  title="Impressum | CORE Attorneys"
+  description="Impressum von CORE Attorneys AG, Dufourstrasse 105, CH-8008 Zürich."
+  locale={locale}
+  canonicalUrl={canonicalUrl}
+  alternateUrl={alternateUrl}
+  noindex={true}
+>
+  <div class="py-12 bg-bg-light border-b border-bg-light">
+    <div class="container">
+      <nav aria-label="Brotkrümelpfad" class="mb-4">
+        <ol class="flex items-center gap-2 text-sm font-sans text-text/50 list-none m-0 p-0">
+          <li><a href="/de/" class="hover:text-accent transition-colors">Startseite</a></li>
+          <li aria-hidden="true" class="text-text/30">/</li>
+          <li class="text-text" aria-current="page">Impressum</li>
+        </ol>
+      </nav>
+      <h1 class="font-heading font-bold text-text" style="font-size: clamp(32px, 5vw, 48px);">
+        Impressum
+      </h1>
+    </div>
+  </div>
+
+  <article class="py-16">
+    <div class="container max-w-3xl">
+      <div class="prose prose-lg max-w-none prose-headings:font-heading prose-headings:text-text prose-a:text-accent">
+        <h2>Kontakt</h2>
+        <address class="not-italic">
+          <strong>CORE Attorneys AG</strong><br />
+          Dufourstrasse 105<br />
+          CH-8008 Zürich<br />
+          Schweiz<br /><br />
+          Telefon: <a href="tel:+41435557000">+41 43 555 70 00</a><br />
+          E-Mail: <a href="mailto:info@core-attorneys.com">info@core-attorneys.com</a>
+        </address>
+
+        <h2>Gesellschaft</h2>
+        <p>
+          CORE Attorneys AG ist eine in der Schweiz eingetragene Aktiengesellschaft.<br />
+          UID: CHE-381.202.187<br />
+          Handelsregisternummer: [Handelsregisternummer eintragen]
+        </p>
+
+        <h2>Berufsbezeichnung und berufsrechtliche Regelungen</h2>
+        <p>
+          Die Anwältinnen und Anwälte von CORE Attorneys AG sind nach schweizerischem Recht zugelassene Rechtsanwältinnen und Rechtsanwälte und unterliegen dem Anwaltsgesetz (BGFA) sowie den Standesregeln des Schweizer Anwaltsverbands (SAV).
+        </p>
+
+        <h2>Aufsichtsbehörde</h2>
+        <p>
+          Kantonale Anwaltskammer Zürich<br />
+          Anwaltskommission des Kantons Zürich
+        </p>
+
+        <h2>Haftungsausschluss</h2>
+        <p>
+          Die Inhalte dieser Website dienen ausschliesslich allgemeinen Informationszwecken und stellen keine Rechtsberatung dar. Für die Richtigkeit, Vollständigkeit und Aktualität der Inhalte wird keine Gewähr übernommen.
+        </p>
+
+        <h2>Urheberrecht</h2>
+        <p>
+          Alle Inhalte dieser Website sind urheberrechtlich geschützt. Die Vervielfältigung, Verbreitung oder öffentliche Wiedergabe ohne ausdrückliche Genehmigung von CORE Attorneys AG ist untersagt.
+        </p>
+
+        <h2>Verantwortlich für den Inhalt</h2>
+        <p>CORE Attorneys AG, Zürich</p>
+      </div>
+    </div>
+  </article>
+</BaseLayout>

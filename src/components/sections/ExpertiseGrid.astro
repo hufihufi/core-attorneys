@@ -1,0 +1,66 @@
+---
+import type { Locale } from '../../utils/i18n';
+import { useTranslations, getLocalizedUrl } from '../../utils/i18n';
+import { getCollection } from 'astro:content';
+import ExpertiseCard from '../cards/ExpertiseCard.astro';
+
+interface Props {
+  locale: Locale;
+  /** If true, show only featured items (for homepage). Default shows all. */
+  featured?: boolean;
+  heading?: string;
+  subheading?: string;
+}
+
+const { locale, featured = false, heading, subheading } = Astro.props;
+const t = useTranslations(locale);
+
+const collectionName = locale === 'de' ? 'expertise_de' : 'expertise_en';
+const allExpertise = await getCollection(collectionName);
+const sorted = allExpertise
+  .filter((e) => !featured || e.data.featured)
+  .sort((a, b) => a.data.order - b.data.order);
+---
+
+<section class="py-16 lg:py-20 bg-white" aria-labelledby="expertise-heading">
+  <div class="container">
+    <header class="mb-10">
+      <h2
+        id="expertise-heading"
+        class="font-heading font-bold text-text mb-3"
+        style="font-size: clamp(28px, 4vw, 36px);"
+      >
+        {heading ?? t.expertise.heading}
+      </h2>
+      {(subheading ?? t.expertise.subheading) && (
+        <p class="font-sans text-lg text-text/60">
+          {subheading ?? t.expertise.subheading}
+        </p>
+      )}
+    </header>
+
+    <ul
+      class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 list-none m-0 p-0"
+      role="list"
+    >
+      {sorted.map((item) => (
+        <li>
+          <ExpertiseCard
+            locale={locale}
+            title={item.data.title}
+            summary={item.data.summary}
+            slug={item.slug.split('/').pop() ?? item.slug}
+          />
+        </li>
+      ))}
+    </ul>
+
+    {featured && sorted.length > 0 && (
+      <div class="mt-8 text-center">
+        <a href={getLocalizedUrl(locale, '/expertise/')} class="btn-outline">
+          {t.expertise.allAreas}
+        </a>
+      </div>
+    )}
+  </div>
+</section>

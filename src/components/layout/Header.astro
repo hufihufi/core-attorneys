@@ -1,0 +1,60 @@
+---
+import type { Locale } from '../../utils/i18n';
+import Navigation from './Navigation.astro';
+import MobileMenu from './MobileMenu.astro';
+
+interface Props {
+  locale: Locale;
+  currentUrl: URL;
+}
+
+const { locale, currentUrl } = Astro.props;
+---
+
+<header
+  class="sticky top-0 z-50 bg-bg-light border-b border-bg-light/80 shadow-sm"
+  role="banner"
+>
+  <div class="container">
+    <div class="flex items-center justify-between h-[68px]">
+      <!-- Logo -->
+      <a
+        href={`/${locale}/`}
+        class="flex-shrink-0 focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-4 rounded-sm"
+        aria-label="CORE Attorneys – Zur Startseite"
+      >
+        <img
+          src="/images/logo.svg"
+          alt="CORE Attorneys"
+          width="180"
+          height="40"
+          class="h-10 w-auto"
+          loading="eager"
+        />
+      </a>
+
+      <!-- Contact info (desktop only, visible on large screens) -->
+      <div class="hidden xl:flex items-center gap-6 text-sm text-text/70 font-sans">
+        <a
+          href="tel:+41435557000"
+          class="hover:text-accent transition-colors"
+          aria-label="Telefon: +41 43 555 70 00"
+        >
+          +41 43 555 70 00
+        </a>
+        <a
+          href="mailto:info@core-attorneys.com"
+          class="hover:text-accent transition-colors"
+        >
+          info@core-attorneys.com
+        </a>
+      </div>
+
+      <!-- Desktop Navigation -->
+      <Navigation locale={locale} currentUrl={currentUrl} />
+
+      <!-- Mobile Hamburger -->
+      <MobileMenu locale={locale} currentUrl={currentUrl} />
+    </div>
+  </div>
+</header>

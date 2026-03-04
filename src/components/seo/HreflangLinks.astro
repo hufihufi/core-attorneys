@@ -1,0 +1,19 @@
+---
+import type { Locale } from '../../utils/i18n';
+
+interface Props {
+  canonicalUrl: string;
+  alternateUrl?: string;
+  locale: Locale;
+}
+
+const { canonicalUrl, alternateUrl, locale } = Astro.props;
+
+// Determine DE and EN URLs
+const deUrl = locale === 'de' ? canonicalUrl : (alternateUrl ?? canonicalUrl.replace('/en/', '/de/'));
+const enUrl = locale === 'en' ? canonicalUrl : (alternateUrl ?? canonicalUrl.replace('/de/', '/en/'));
+---
+
+<link rel="alternate" hreflang="de-CH" href={deUrl} />
+<link rel="alternate" hreflang="en" href={enUrl} />
+<link rel="alternate" hreflang="x-default" href={deUrl} />

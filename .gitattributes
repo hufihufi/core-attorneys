@@ -1,0 +1,26 @@
+# Enforce Unix line endings for all text files
+* text=auto eol=lf
+
+# Explicitly declare text files
+*.astro text eol=lf
+*.ts text eol=lf
+*.js text eol=lf
+*.mjs text eol=lf
+*.json text eol=lf
+*.md text eol=lf
+*.mdx text eol=lf
+*.yaml text eol=lf
+*.yml text eol=lf
+*.css text eol=lf
+*.html text eol=lf
+*.svg text eol=lf
+*.txt text eol=lf
+
+# Binary files
+*.woff2 binary
+*.ico binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary

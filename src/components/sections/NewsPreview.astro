@@ -1,0 +1,67 @@
+---
+import type { Locale } from '../../utils/i18n';
+import { useTranslations, getLocalizedUrl } from '../../utils/i18n';
+import { getCollection } from 'astro:content';
+import NewsCard from '../cards/NewsCard.astro';
+
+interface Props {
+  locale: Locale;
+  limit?: number;
+}
+
+const { locale, limit = 3 } = Astro.props;
+const t = useTranslations(locale);
+
+const collectionName = locale === 'de' ? 'blog_de' : 'blog_en';
+const allPosts = await getCollection(collectionName);
+const latestPosts = allPosts
+  .filter((p) => !p.data.draft)
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .slice(0, limit);
+---
+
+<section class="py-16 lg:py-20 bg-bg-light" aria-labelledby="news-preview-heading">
+  <div class="container">
+    <header class="mb-10 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
+      <div>
+        <h2
+          id="news-preview-heading"
+          class="font-heading font-bold text-text mb-2"
+          style="font-size: clamp(28px, 4vw, 36px);"
+        >
+          {t.news.heading}
+        </h2>
+        <p class="font-sans text-lg text-text/60">{t.news.subheading}</p>
+      </div>
+      <a
+        href={getLocalizedUrl(locale, '/news/')}
+        class="flex-shrink-0 text-sm font-heading font-semibold text-accent hover:underline"
+      >
+        {t.news.allArticles} →
+      </a>
+    </header>
+
+    {latestPosts.length > 0 ? (
+      <ul
+        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 list-none m-0 p-0"
+        role="list"
+      >
+        {latestPosts.map((post) => (
+          <li class="flex">
+            <NewsCard
+              locale={locale}
+              title={post.data.title}
+              description={post.data.description}
+              pubDate={post.data.pubDate}
+              slug={post.slug.split('/').pop() ?? post.slug}
+              tags={post.data.tags}
+              heroImage={post.data.heroImage}
+            />
+          </li>
+        ))}
+      </ul>
+    ) : (
+      <p class="font-sans text-text/60">{t.news.noArticles}</p>
+    )}
+  </div>
+</section>

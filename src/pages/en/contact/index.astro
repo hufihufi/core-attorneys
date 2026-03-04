@@ -1,0 +1,132 @@
+---
+import BaseLayout from '../../../components/layout/BaseLayout.astro';
+import OpenStreetMap from '../../../components/ui/OpenStreetMap.astro';
+
+const locale = 'en';
+const canonicalUrl = 'https://www.core-attorneys.com/en/contact/';
+const alternateUrl = 'https://www.core-attorneys.com/de/kontakt/';
+
+const contactSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'ContactPage',
+  url: canonicalUrl,
+  name: 'Contact – CORE Attorneys',
+  inLanguage: 'en',
+  about: { '@id': 'https://www.core-attorneys.com/#organization' },
+};
+---
+
+<BaseLayout
+  title="Contact | CORE Attorneys"
+  description="CORE Attorneys – Dufourstrasse 105, CH-8008 Zurich. Phone: +41 43 555 70 00. Email: info@core-attorneys.com."
+  locale={locale}
+  canonicalUrl={canonicalUrl}
+  alternateUrl={alternateUrl}
+  schemas={[contactSchema]}
+>
+  <div class="py-12 bg-bg-light border-b border-bg-light">
+    <div class="container">
+      <nav aria-label="Breadcrumb" class="mb-4">
+        <ol class="flex items-center gap-2 text-sm font-sans text-text/50 list-none m-0 p-0">
+          <li><a href="/en/" class="hover:text-accent transition-colors">Home</a></li>
+          <li aria-hidden="true" class="text-text/30">/</li>
+          <li class="text-text" aria-current="page">Contact</li>
+        </ol>
+      </nav>
+      <h1 class="font-heading font-bold text-text" style="font-size: clamp(32px, 5vw, 48px);">
+        Contact
+      </h1>
+      <p class="font-sans text-lg text-text/60 mt-3">
+        We look forward to hearing from you.
+      </p>
+    </div>
+  </div>
+
+  <section class="py-16 lg:py-20">
+    <div class="container">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
+        <div>
+          <div class="w-12 h-1 bg-accent mb-8" aria-hidden="true"></div>
+
+          <dl class="space-y-8">
+            <div>
+              <dt class="font-heading font-semibold text-sm uppercase tracking-wider text-text/50 mb-2">
+                Address
+              </dt>
+              <dd>
+                <address class="not-italic font-sans text-lg text-text leading-relaxed">
+                  CORE Attorneys AG<br />
+                  Dufourstrasse 105<br />
+                  CH-8008 Zurich<br />
+                  Switzerland
+                </address>
+              </dd>
+            </div>
+
+            <div>
+              <dt class="font-heading font-semibold text-sm uppercase tracking-wider text-text/50 mb-2">
+                Phone
+              </dt>
+              <dd>
+                <a
+                  href="tel:+41435557000"
+                  class="font-sans text-lg text-text hover:text-accent transition-colors no-underline"
+                >
+                  +41 43 555 70 00
+                </a>
+              </dd>
+            </div>
+
+            <div>
+              <dt class="font-heading font-semibold text-sm uppercase tracking-wider text-text/50 mb-2">
+                Email
+              </dt>
+              <dd>
+                <a
+                  href="mailto:info@core-attorneys.com"
+                  class="font-sans text-lg text-accent hover:text-accent-dark transition-colors"
+                >
+                  info@core-attorneys.com
+                </a>
+              </dd>
+            </div>
+
+            <div>
+              <dt class="font-heading font-semibold text-sm uppercase tracking-wider text-text/50 mb-2">
+                Office hours
+              </dt>
+              <dd class="font-sans text-lg text-text">
+                Monday – Friday<br />
+                8:30 am – 6:00 pm
+              </dd>
+            </div>
+
+            <div>
+              <dt class="font-heading font-semibold text-sm uppercase tracking-wider text-text/50 mb-2">
+                LinkedIn
+              </dt>
+              <dd>
+                <a
+                  href="https://www.linkedin.com/company/core-attorneys"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="font-sans text-lg text-accent hover:underline"
+                  aria-label="CORE Attorneys on LinkedIn (opens in new tab)"
+                >
+                  CORE Attorneys on LinkedIn
+                </a>
+              </dd>
+            </div>
+          </dl>
+        </div>
+
+        <div>
+          <h2 class="font-heading font-semibold text-xl text-text mb-4 sr-only">
+            Location on map
+          </h2>
+          <OpenStreetMap locale={locale} lat={47.3645} lon={8.5532} zoom={16} />
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

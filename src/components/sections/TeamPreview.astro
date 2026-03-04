@@ -1,0 +1,63 @@
+---
+import type { Locale } from '../../utils/i18n';
+import { useTranslations, getLocalizedUrl } from '../../utils/i18n';
+import { getCollection } from 'astro:content';
+import TeamCard from '../cards/TeamCard.astro';
+
+interface Props {
+  locale: Locale;
+  /** Max number of team members to show */
+  limit?: number;
+}
+
+const { locale, limit = 4 } = Astro.props;
+const t = useTranslations(locale);
+
+const teamMembers = await getCollection('team');
+const activeMembers = teamMembers
+  .filter((m) => m.data.active)
+  .sort((a, b) => a.data.order - b.data.order)
+  .slice(0, limit);
+---
+
+<section class="py-16 lg:py-20 bg-white" aria-labelledby="team-preview-heading">
+  <div class="container">
+    <header class="mb-10">
+      <h2
+        id="team-preview-heading"
+        class="font-heading font-bold text-text mb-3"
+        style="font-size: clamp(28px, 4vw, 36px);"
+      >
+        {t.team.heading}
+      </h2>
+      <p class="font-sans text-lg text-text/60">{t.team.subheading}</p>
+    </header>
+
+    <ul
+      class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 list-none m-0 p-0"
+      role="list"
+    >
+      {activeMembers.map((member) => (
+        <li>
+          <TeamCard
+            locale={locale}
+            name={member.data.name}
+            position={locale === 'de' ? member.data.position_de : member.data.position_en}
+            bio={locale === 'de' ? member.data.bio_de : member.data.bio_en}
+            image={member.data.image}
+            email={member.data.email}
+            linkedin={member.data.linkedin}
+            awards={member.data.awards}
+            compact={true}
+          />
+        </li>
+      ))}
+    </ul>
+
+    <div class="mt-8 text-center">
+      <a href={getLocalizedUrl(locale, '/team/')} class="btn-outline">
+        {t.team.allMembers}
+      </a>
+    </div>
+  </div>
+</section>

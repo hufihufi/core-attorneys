@@ -1,0 +1,80 @@
+---
+import type { Locale } from '../../utils/i18n';
+import { useTranslations, getLocalizedUrl, formatDate } from '../../utils/i18n';
+
+interface Props {
+  locale: Locale;
+  title: string;
+  description: string;
+  pubDate: Date;
+  slug: string;
+  tags?: string[];
+  heroImage?: string;
+}
+
+const { locale, title, description, pubDate, slug, tags = [], heroImage } = Astro.props;
+const t = useTranslations(locale);
+const formattedDate = formatDate(pubDate, locale);
+---
+
+<article class="group flex flex-col bg-white border border-bg-light hover:border-accent transition-colors duration-200 rounded-sm overflow-hidden h-full">
+  {heroImage && (
+    <div class="aspect-video overflow-hidden bg-bg-light">
+      <img
+        src={heroImage}
+        alt=""
+        aria-hidden="true"
+        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+        loading="lazy"
+        width="600"
+        height="338"
+      />
+    </div>
+  )}
+
+  <div class="flex flex-col flex-1 p-6">
+    <!-- Date & Tags -->
+    <div class="flex flex-wrap items-center gap-3 mb-3">
+      <time
+        datetime={pubDate.toISOString()}
+        class="text-xs font-sans text-text/50"
+        aria-label={`${t.news.publishedOn} ${formattedDate}`}
+      >
+        {formattedDate}
+      </time>
+      {tags.slice(0, 2).map((tag) => (
+        <span class="text-xs font-sans bg-accent/10 text-accent px-2 py-0.5 rounded-sm">
+          {tag}
+        </span>
+      ))}
+    </div>
+
+    <!-- Title -->
+    <h3 class="font-heading font-bold text-lg text-text group-hover:text-accent transition-colors duration-200 mb-3 line-clamp-3">
+      <a
+        href={getLocalizedUrl(locale, `/news/${slug}/`)}
+        class="no-underline hover:no-underline focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2 rounded-sm"
+      >
+        {title}
+      </a>
+    </h3>
+
+    <!-- Description -->
+    <p class="font-sans text-sm text-text/70 leading-relaxed line-clamp-3 flex-1 mb-4">
+      {description}
+    </p>
+
+    <!-- Read more -->
+    <a
+      href={getLocalizedUrl(locale, `/news/${slug}/`)}
+      class="inline-flex items-center gap-1 text-sm font-heading font-semibold text-accent hover:gap-2 transition-all duration-150 mt-auto"
+      aria-hidden="true"
+      tabindex="-1"
+    >
+      {t.news.readMore}
+      <svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+      </svg>
+    </a>
+  </div>
+</article>

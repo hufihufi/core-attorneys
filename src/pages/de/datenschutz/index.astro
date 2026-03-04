@@ -1,0 +1,96 @@
+---
+import BaseLayout from '../../../components/layout/BaseLayout.astro';
+
+const locale = 'de';
+const canonicalUrl = 'https://www.core-attorneys.com/de/datenschutz/';
+const alternateUrl = 'https://www.core-attorneys.com/en/privacy/';
+const lastUpdated = '4. März 2026';
+---
+
+<BaseLayout
+  title="Datenschutzerklärung | CORE Attorneys"
+  description="Datenschutzerklärung von CORE Attorneys AG gemäss Schweizer Datenschutzgesetz (DSG) und DSGVO."
+  locale={locale}
+  canonicalUrl={canonicalUrl}
+  alternateUrl={alternateUrl}
+  noindex={false}
+>
+  <div class="py-12 bg-bg-light border-b border-bg-light">
+    <div class="container">
+      <nav aria-label="Brotkrümelpfad" class="mb-4">
+        <ol class="flex items-center gap-2 text-sm font-sans text-text/50 list-none m-0 p-0">
+          <li><a href="/de/" class="hover:text-accent transition-colors">Startseite</a></li>
+          <li aria-hidden="true" class="text-text/30">/</li>
+          <li class="text-text" aria-current="page">Datenschutz</li>
+        </ol>
+      </nav>
+      <h1 class="font-heading font-bold text-text" style="font-size: clamp(32px, 5vw, 48px);">
+        Datenschutzerklärung
+      </h1>
+      <p class="font-sans text-sm text-text/50 mt-3">Letzte Aktualisierung: {lastUpdated}</p>
+    </div>
+  </div>
+
+  <article class="py-16">
+    <div class="container max-w-3xl">
+      <div class="prose prose-lg max-w-none prose-headings:font-heading prose-headings:text-text prose-a:text-accent">
+
+        <h2>1. Verantwortliche Stelle</h2>
+        <p>
+          Verantwortlich für die Datenbearbeitung auf dieser Website ist:<br />
+          CORE Attorneys AG, Dufourstrasse 105, CH-8008 Zürich<br />
+          E-Mail: <a href="mailto:info@core-attorneys.com">info@core-attorneys.com</a>
+        </p>
+
+        <h2>2. Grundsätze</h2>
+        <p>
+          CORE Attorneys AG verarbeitet personenbezogene Daten gemäss dem Schweizer Datenschutzgesetz (DSG) sowie, soweit anwendbar, der Datenschutz-Grundverordnung der EU (DSGVO). Wir bearbeiten nur diejenigen Daten, die für den jeweiligen Zweck notwendig sind.
+        </p>
+
+        <h2>3. Cookies und Tracking</h2>
+        <p>
+          Diese Website verwendet <strong>keine Cookies</strong> und kein persönliches Tracking. Es werden keine Tracking-Pixels, keine Social-Media-Cookies und kein Google Analytics eingesetzt.
+        </p>
+        <p>
+          Wir verwenden Cloudflare Web Analytics für aggregierte, anonymisierte Statistiken zur Websitenutzung. Diese Lösung ist cookiefrei und erhebt keine personenbezogenen Daten.
+        </p>
+
+        <h2>4. Hosting und Infrastruktur</h2>
+        <p>
+          Diese Website wird über Cloudflare Pages gehostet. Cloudflare verarbeitet dabei Server-Logs und technische Verbindungsdaten (u.a. IP-Adressen) im Rahmen der Bereitstellung des Dienstes. Weitere Informationen: <a href="https://www.cloudflare.com/privacypolicy/" target="_blank" rel="noopener noreferrer">Cloudflare Privacy Policy</a>.
+        </p>
+
+        <h2>5. Kontaktaufnahme per E-Mail</h2>
+        <p>
+          Wenn Sie uns per E-Mail kontaktieren, werden Ihre Angaben zur Bearbeitung Ihrer Anfrage gespeichert. Diese Daten werden nicht an Dritte weitergegeben und nach Abschluss der Bearbeitung gelöscht, sofern keine gesetzlichen Aufbewahrungspflichten bestehen.
+        </p>
+
+        <h2>6. LinkedIn</h2>
+        <p>
+          Auf dieser Website ist ein LinkedIn-Feed über den Dienst Walls.io eingebunden. Dieser wird erst geladen, wenn Sie aktiv zustimmen (Consent-Aktivierung). Beim Laden werden Daten an Walls.io (Walls.io GmbH) und LinkedIn (LinkedIn Corporation, USA) übertragen. Walls.io ist verantwortlich für die Datenschutz-Konformität seines Dienstes. Weitere Informationen: <a href="https://walls.io/privacy" target="_blank" rel="noopener noreferrer">Walls.io Datenschutz</a>, <a href="https://www.linkedin.com/legal/privacy-policy" target="_blank" rel="noopener noreferrer">LinkedIn Datenschutz</a>.
+        </p>
+
+        <h2>7. Karten (OpenStreetMap)</h2>
+        <p>
+          Auf der Kontaktseite kann eine Karte über OpenStreetMap geladen werden. Diese wird erst nach Ihrer aktiven Zustimmung geladen. Beim Laden werden Daten an OpenStreetMap (OpenStreetMap Foundation, UK) übertragen. Weitere Informationen: <a href="https://wiki.osmfoundation.org/wiki/Privacy_Policy" target="_blank" rel="noopener noreferrer">OpenStreetMap Datenschutz</a>.
+        </p>
+
+        <h2>8. Schriften</h2>
+        <p>
+          Diese Website verwendet selbst gehostete Schriften. Es werden keine Schriften von Google Fonts oder anderen externen Diensten geladen.
+        </p>
+
+        <h2>9. Ihre Rechte</h2>
+        <p>
+          Sie haben das Recht auf Auskunft, Berichtigung, Löschung und Einschränkung der Bearbeitung Ihrer personenbezogenen Daten sowie das Recht auf Datenübertragbarkeit. Bitte wenden Sie sich hierfür an: <a href="mailto:info@core-attorneys.com">info@core-attorneys.com</a>.
+        </p>
+
+        <h2>10. Änderungen</h2>
+        <p>
+          Wir behalten uns vor, diese Datenschutzerklärung jederzeit anzupassen. Die aktuelle Version ist stets auf dieser Seite abrufbar.
+        </p>
+
+      </div>
+    </div>
+  </article>
+</BaseLayout>

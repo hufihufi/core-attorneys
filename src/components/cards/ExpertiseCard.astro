@@ -1,0 +1,34 @@
+---
+import type { Locale } from '../../utils/i18n';
+import { useTranslations, getLocalizedUrl } from '../../utils/i18n';
+
+interface Props {
+  locale: Locale;
+  title: string;
+  summary: string;
+  slug: string;
+}
+
+const { locale, title, summary, slug } = Astro.props;
+const t = useTranslations(locale);
+---
+
+<article class="group bg-white border border-bg-light hover:border-accent transition-colors duration-200 p-6 rounded-sm">
+  <div class="w-8 h-1 bg-accent mb-4 transition-all duration-200 group-hover:w-12" aria-hidden="true"></div>
+  <h3 class="font-heading font-semibold text-xl text-text mb-3 group-hover:text-accent transition-colors duration-200">
+    {title}
+  </h3>
+  <p class="font-sans text-sm text-text/70 leading-relaxed mb-4 line-clamp-3">
+    {summary}
+  </p>
+  <a
+    href={getLocalizedUrl(locale, `/expertise/${slug}/`)}
+    class="inline-flex items-center gap-1 text-sm font-heading font-semibold text-accent hover:gap-2 transition-all duration-150"
+    aria-label={`${t.expertise.learnMore}: ${title}`}
+  >
+    {t.expertise.learnMore}
+    <svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+    </svg>
+  </a>
+</article>

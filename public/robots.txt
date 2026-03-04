@@ -1,0 +1,23 @@
+User-agent: *
+Allow: /
+
+# Block CMS route from indexing
+Disallow: /keystatic/
+
+# Allow AI crawlers for GEO
+User-agent: GPTBot
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Googlebot
+Allow: /
+
+Sitemap: https://www.core-attorneys.com/sitemap-index.xml

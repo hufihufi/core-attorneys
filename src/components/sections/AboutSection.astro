@@ -1,0 +1,63 @@
+---
+import type { Locale } from '../../utils/i18n';
+import { useTranslations, getLocalizedUrl } from '../../utils/i18n';
+
+interface Props {
+  locale: Locale;
+  aboutText?: string;
+}
+
+const { locale, aboutText } = Astro.props;
+const t = useTranslations(locale);
+---
+
+<section class="py-16 lg:py-20 bg-bg-light" aria-labelledby="about-heading">
+  <div class="container">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+      <!-- Text -->
+      <div>
+        <div class="w-12 h-1 bg-accent mb-6" aria-hidden="true"></div>
+        <h2
+          id="about-heading"
+          class="font-heading font-bold text-text mb-6"
+          style="font-size: clamp(28px, 4vw, 36px);"
+        >
+          {t.about.heading}
+        </h2>
+        <p class="font-sans text-lg text-text/80 leading-relaxed mb-8">
+          {aboutText ?? t.about.body}
+        </p>
+        <a href={getLocalizedUrl(locale, '/team/')} class="btn-accent">
+          {t.about.learnMore}
+        </a>
+      </div>
+
+      <!-- Key facts -->
+      <div class="grid grid-cols-2 gap-6">
+        {[
+          {
+            number: locale === 'de' ? 'Boutique' : 'Boutique',
+            label: locale === 'de' ? 'Schweizer Kanzlei' : 'Swiss Law Firm',
+          },
+          {
+            number: '6',
+            label: locale === 'de' ? 'Spezialbereiche' : 'Practice Areas',
+          },
+          {
+            number: locale === 'de' ? 'CH + EU' : 'CH + EU',
+            label: locale === 'de' ? 'Tätigkeitsgebiet' : 'Area of practice',
+          },
+          {
+            number: locale === 'de' ? 'Unabhängig' : 'Independent',
+            label: locale === 'de' ? 'Kanzlei ohne Konzernbindung' : 'No corporate affiliation',
+          },
+        ].map((fact) => (
+          <div class="bg-white p-6 border-l-4 border-accent">
+            <div class="font-heading font-bold text-2xl text-text mb-1">{fact.number}</div>
+            <div class="font-sans text-sm text-text/60">{fact.label}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>

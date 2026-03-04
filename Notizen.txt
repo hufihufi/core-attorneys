@@ -1,0 +1,15 @@
+Ziel: Website neu gestalten, technisch neu aufstellen, ohne Wordpress mit einfachem CMS, um Inhalte und Blog zu befüttern
+Zusätzlich: Jobs-Seite
+Newsletter-Anmeldung kann raus
+Datenschutzfreundlich, keine Cookies
+Grund-Design (Farben) soll beibehalten bleiben
+Backend für die Verwaltung von Content
+SEO und GEO optimiert
+Fokus auf schnelle Ladezeiten
+Mehrsprachigkeit (DE, EN) - keine automatische Übersetzung
+Einbindung LinkedIn Feed
+Keine Formularanbindung
+Responsive Design
+Einhaltung der Accessibility-Anforderungen, sowohl technisch wie auch im Design
+Initiales Hosting bei Cloudflare, Quelltext bei Github
+Techstack: Astro.js und tailwind.css

@@ -1,0 +1,73 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../../components/layout/BaseLayout.astro';
+import TeamCard from '../../../components/cards/TeamCard.astro';
+
+const locale = 'de';
+const canonicalUrl = 'https://www.core-attorneys.com/de/team/';
+const alternateUrl = 'https://www.core-attorneys.com/en/team/';
+
+const teamMembers = await getCollection('team');
+const activeMembers = teamMembers
+  .filter((m) => m.data.active)
+  .sort((a, b) => a.data.order - b.data.order);
+
+const teamSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebPage',
+  url: canonicalUrl,
+  name: 'Team – CORE Attorneys',
+  inLanguage: 'de-CH',
+};
+---
+
+<BaseLayout
+  title="Team | CORE Attorneys"
+  description="Lernen Sie das Team von CORE Attorneys kennen – erfahrene Anwältinnen und Anwälte mit internationalem Profil und Spezialisierung in Wettbewerbsrecht und Regulierung."
+  locale={locale}
+  canonicalUrl={canonicalUrl}
+  alternateUrl={alternateUrl}
+  schemas={[teamSchema]}
+>
+  <div class="py-12 bg-bg-light border-b border-bg-light">
+    <div class="container">
+      <nav aria-label="Brotkrümelpfad" class="mb-4">
+        <ol class="flex items-center gap-2 text-sm font-sans text-text/50 list-none m-0 p-0">
+          <li><a href="/de/" class="hover:text-accent transition-colors">Startseite</a></li>
+          <li aria-hidden="true" class="text-text/30">/</li>
+          <li class="text-text" aria-current="page">Team</li>
+        </ol>
+      </nav>
+      <h1 class="font-heading font-bold text-text" style="font-size: clamp(32px, 5vw, 48px);">
+        Unser Team
+      </h1>
+      <p class="font-sans text-lg text-text/60 mt-3 max-w-2xl">
+        Erfahrene Anwältinnen und Anwälte mit internationalem Profil und tiefer Spezialisierung.
+      </p>
+    </div>
+  </div>
+
+  <section class="py-16 lg:py-20">
+    <div class="container">
+      <ul
+        class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 list-none m-0 p-0"
+        role="list"
+      >
+        {activeMembers.map((member) => (
+          <li>
+            <TeamCard
+              locale={locale}
+              name={member.data.name}
+              position={member.data.position_de}
+              bio={member.data.bio_de}
+              image={member.data.image}
+              email={member.data.email}
+              linkedin={member.data.linkedin}
+              awards={member.data.awards}
+            />
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+</BaseLayout>

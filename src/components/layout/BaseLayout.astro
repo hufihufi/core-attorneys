@@ -1,0 +1,112 @@
+---
+import type { Locale } from '../../utils/i18n';
+import { useTranslations } from '../../utils/i18n';
+import SkipLink from '../ui/SkipLink.astro';
+import Header from './Header.astro';
+import Footer from './Footer.astro';
+import SEOHead from '../seo/SEOHead.astro';
+import JsonLd from '../seo/JsonLd.astro';
+import '../../styles/global.css';
+
+interface Props {
+  title: string;
+  description?: string;
+  locale: Locale;
+  canonicalUrl?: string;
+  alternateUrl?: string;
+  ogImage?: string;
+  ogType?: 'website' | 'article';
+  publishedTime?: string;
+  modifiedTime?: string;
+  noindex?: boolean;
+  /** Additional JSON-LD schemas for the page */
+  schemas?: Record<string, unknown>[];
+}
+
+const {
+  title,
+  description,
+  locale,
+  canonicalUrl = Astro.url.href,
+  alternateUrl,
+  ogImage,
+  ogType = 'website',
+  publishedTime,
+  modifiedTime,
+  noindex = false,
+  schemas = [],
+} = Astro.props;
+
+const t = useTranslations(locale);
+
+// Global Organization JSON-LD on every page
+const orgSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'LegalService',
+  '@id': 'https://www.core-attorneys.com/#organization',
+  name: 'CORE Attorneys',
+  url: 'https://www.core-attorneys.com',
+  logo: 'https://www.core-attorneys.com/images/logo.svg',
+  image: 'https://www.core-attorneys.com/images/og-default.jpg',
+  description:
+    'CORE Attorneys is an independent Swiss boutique law firm specialising in competition law, regulatory matters and distribution law.',
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: 'Dufourstrasse 105',
+    addressLocality: 'Zürich',
+    postalCode: '8008',
+    addressCountry: 'CH',
+  },
+  geo: {
+    '@type': 'GeoCoordinates',
+    latitude: 47.3645,
+    longitude: 8.5532,
+  },
+  telephone: '+41435557000',
+  email: 'info@core-attorneys.com',
+  sameAs: ['https://www.linkedin.com/company/core-attorneys'],
+  areaServed: ['CH', 'EU'],
+  serviceType: [
+    'Competition Law',
+    'Antitrust Law',
+    'Regulatory Law',
+    'Distribution Law',
+    'E-Commerce Law',
+    'Compliance',
+    'Internal Investigations',
+  ],
+  foundingDate: '2018',
+  legalName: 'CORE Attorneys AG',
+};
+---
+
+<!doctype html>
+<html lang={locale} id="top">
+  <head>
+    <SEOHead
+      title={title}
+      description={description}
+      locale={locale}
+      canonicalUrl={canonicalUrl}
+      alternateUrl={alternateUrl}
+      ogImage={ogImage}
+      ogType={ogType}
+      publishedTime={publishedTime}
+      modifiedTime={modifiedTime}
+      noindex={noindex}
+    />
+    <JsonLd schema={orgSchema} />
+    {schemas.map((schema) => <JsonLd schema={schema} />)}
+  </head>
+  <body>
+    <SkipLink label={t.nav.skipToMain} />
+
+    <Header locale={locale} currentUrl={Astro.url} />
+
+    <main id="main-content" tabindex="-1">
+      <slot />
+    </main>
+
+    <Footer locale={locale} />
+  </body>
+</html>

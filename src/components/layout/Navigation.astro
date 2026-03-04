@@ -1,0 +1,113 @@
+---
+import type { Locale } from '../../utils/i18n';
+import { useTranslations, getLocalizedUrl } from '../../utils/i18n';
+import LanguageSwitcher from './LanguageSwitcher.astro';
+
+interface Props {
+  locale: Locale;
+  currentUrl: URL;
+}
+
+const { locale, currentUrl } = Astro.props;
+const t = useTranslations(locale);
+
+const navLinks = [
+  { label: t.nav.expertise, href: getLocalizedUrl(locale, '/expertise/'), hasDropdown: true },
+  { label: t.nav.team, href: getLocalizedUrl(locale, '/team/'), hasDropdown: false },
+  { label: t.nav.news, href: getLocalizedUrl(locale, '/news/'), hasDropdown: false },
+  { label: t.nav.jobs, href: getLocalizedUrl(locale, '/jobs/'), hasDropdown: false },
+  { label: t.nav.contact, href: getLocalizedUrl(locale, locale === 'de' ? '/kontakt/' : '/contact/'), hasDropdown: false },
+];
+
+function isActive(href: string): boolean {
+  return currentUrl.pathname.startsWith(href);
+}
+---
+
+<!-- Desktop Navigation -->
+<nav aria-label={t.aria.mainNav} class="hidden lg:flex items-center gap-1">
+  <ul class="flex items-center gap-1 list-none m-0 p-0" role="list">
+    {navLinks.map((link) => (
+      <li class:list={[link.hasDropdown && 'relative group']}>
+        {link.hasDropdown ? (
+          <>
+            <button
+              type="button"
+              class:list={[
+                'flex items-center gap-1 px-4 py-2 font-heading font-semibold text-sm tracking-wide',
+                'text-text hover:text-accent transition-colors duration-200',
+                'focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2 rounded-sm',
+                isActive(link.href) && 'text-accent',
+              ]}
+              aria-haspopup="true"
+              aria-expanded="false"
+              aria-label={`${link.label}, ${t.aria.expertiseDropdown}`}
+            >
+              {link.label}
+              <svg
+                aria-hidden="true"
+                class="w-4 h-4 transition-transform group-hover:rotate-180"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+
+            <!-- Dropdown -->
+            <ul
+              class="absolute top-full left-0 mt-1 w-72 bg-white shadow-lg border-t-2 border-accent
+                     opacity-0 invisible group-hover:opacity-100 group-hover:visible
+                     focus-within:opacity-100 focus-within:visible
+                     transition-all duration-200 z-50 list-none m-0 p-2"
+              role="list"
+              aria-label={t.aria.expertiseDropdown}
+            >
+              {t.nav.expertiseItems.map((item) => (
+                <li>
+                  <a
+                    href={getLocalizedUrl(locale, `/expertise/${item.slug}/`)}
+                    class:list={[
+                      'block px-4 py-2 text-sm font-sans text-text hover:bg-bg-light hover:text-accent',
+                      'transition-colors duration-150 rounded-sm',
+                      'focus-visible:outline-2 focus-visible:outline-accent',
+                      currentUrl.pathname.includes(item.slug) && 'text-accent font-semibold',
+                    ]}
+                  >
+                    {item.label}
+                  </a>
+                </li>
+              ))}
+              <li class="border-t border-bg-light mt-1 pt-1">
+                <a
+                  href={getLocalizedUrl(locale, '/expertise/')}
+                  class="block px-4 py-2 text-sm font-heading font-semibold text-accent hover:bg-bg-light transition-colors duration-150 rounded-sm"
+                >
+                  {t.expertise.allAreas} →
+                </a>
+              </li>
+            </ul>
+          </>
+        ) : (
+          <a
+            href={link.href}
+            class:list={[
+              'px-4 py-2 font-heading font-semibold text-sm tracking-wide',
+              'text-text hover:text-accent transition-colors duration-200',
+              'focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2 rounded-sm',
+              isActive(link.href) && 'text-accent',
+            ]}
+            aria-current={isActive(link.href) ? 'page' : undefined}
+          >
+            {link.label}
+          </a>
+        )}
+      </li>
+    ))}
+  </ul>
+
+  <div class="ml-4 pl-4 border-l border-bg-light">
+    <LanguageSwitcher locale={locale} currentUrl={currentUrl} />
+  </div>
+</nav>
