@@ -4,7 +4,7 @@ export default config({
   storage: {
     kind: 'github',
     repo: {
-      owner: 'YOUR_GITHUB_ORG',
+      owner: 'hufihufi',
       name: 'core-attorneys',
     },
   },
@@ -20,7 +20,7 @@ export default config({
     blog_de: collection({
       label: 'Blog – Deutsch',
       slugField: 'title',
-      path: 'src/content/blog/de/*',
+      path: 'src/content/blog_de/*',
       entryLayout: 'content',
       format: { contentField: 'content' },
       schema: {
@@ -65,7 +65,7 @@ export default config({
     blog_en: collection({
       label: 'Blog – English',
       slugField: 'title',
-      path: 'src/content/blog/en/*',
+      path: 'src/content/blog_en/*',
       entryLayout: 'content',
       format: { contentField: 'content' },
       schema: {
@@ -147,7 +147,7 @@ export default config({
     jobs_de: collection({
       label: 'Jobs – Deutsch',
       slugField: 'title',
-      path: 'src/content/jobs/de/*',
+      path: 'src/content/jobs_de/*',
       entryLayout: 'content',
       format: { contentField: 'content' },
       schema: {
@@ -178,7 +178,7 @@ export default config({
     jobs_en: collection({
       label: 'Jobs – English',
       slugField: 'title',
-      path: 'src/content/jobs/en/*',
+      path: 'src/content/jobs_en/*',
       entryLayout: 'content',
       format: { contentField: 'content' },
       schema: {
@@ -209,7 +209,7 @@ export default config({
     expertise_de: collection({
       label: 'Expertise – Deutsch',
       slugField: 'title',
-      path: 'src/content/expertise/de/*',
+      path: 'src/content/expertise_de/*',
       entryLayout: 'content',
       format: { contentField: 'content' },
       schema: {
@@ -236,7 +236,7 @@ export default config({
     expertise_en: collection({
       label: 'Expertise – English',
       slugField: 'title',
-      path: 'src/content/expertise/en/*',
+      path: 'src/content/expertise_en/*',
       entryLayout: 'content',
       format: { contentField: 'content' },
       schema: {
