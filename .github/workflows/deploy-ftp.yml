@@ -1,0 +1,46 @@
+name: Deploy to FTP (Static Build)
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build (static mode)
+        run: npm run build
+        env:
+          BUILD_TARGET: static
+
+      - name: Verify static build (no Cloudflare artifacts)
+        run: |
+          if find dist -name "_worker.js" 2>/dev/null | grep -q .; then
+            echo "ERROR: Cloudflare worker artifact found in static build – aborting deploy!"
+            exit 1
+          fi
+          echo "✓ Static build verified – no Cloudflare artifacts found"
+          echo "Pages built: $(find dist -name '*.html' | wc -l)"
+          echo "Build size: $(du -sh dist/ | cut -f1)"
+
+      - name: Deploy via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          port: ${{ secrets.FTP_PORT }}
+          local-dir: ./dist/
+          server-dir: ${{ secrets.FTP_REMOTE_DIR }}

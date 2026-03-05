@@ -1,0 +1,43 @@
+# Note: Cloudflare Pages can be connected directly to GitHub (recommended).
+# This workflow is an optional alternative for CI validation before deployment.
+#
+# Preferred setup:
+# 1. Go to Cloudflare Dashboard → Pages → New Project
+# 2. Connect to GitHub repository
+# 3. Build command: npm run build
+# 4. Build output directory: dist
+# 5. Environment variable: NODE_VERSION=20
+#
+# The workflow below validates the build on every PR without deploying.
+
+name: Build validation
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Check build output
+        run: |
+          echo "Build output size:"
+          du -sh dist/
+          echo "Pages generated:"
+          find dist -name "*.html" | wc -l

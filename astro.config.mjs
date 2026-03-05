@@ -2,13 +2,17 @@ import { defineConfig } from 'astro/config';
 import tailwindcss from '@tailwindcss/vite';
 import sitemap from '@astrojs/sitemap';
 import mdx from '@astrojs/mdx';
-import keystatic from '@keystatic/astro';
-import cloudflare from '@astrojs/cloudflare';
+
+// Dual-deploy: static for FTP hosting, server for Cloudflare Pages (Keystatic CMS)
+const isStatic = process.env.BUILD_TARGET === 'static';
+
+const cloudflare = isStatic ? null : (await import('@astrojs/cloudflare')).default;
+const keystatic = isStatic ? null : (await import('@keystatic/astro')).default;
 
 export default defineConfig({
   site: 'https://www.core-attorneys.com',
-  output: 'server',
-  adapter: cloudflare({
+  output: isStatic ? 'static' : 'server',
+  adapter: isStatic ? undefined : cloudflare({
     imageService: 'passthrough',
     platformProxy: {
       enabled: true,
@@ -25,7 +29,7 @@ export default defineConfig({
         },
       },
     }),
-    keystatic(),
+    ...(isStatic ? [] : [keystatic()]),
   ],
   vite: {
     plugins: [tailwindcss()],
