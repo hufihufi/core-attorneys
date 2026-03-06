@@ -34,69 +34,48 @@ jobs:
           echo "Pages built: $(find dist -name '*.html' | wc -l)"
           echo "Build size: $(du -sh dist/ | cut -f1)"
 
-      - name: Diagnose connection (temporary debug step)
+      - name: Deploy via FTPS (lftp)
         env:
           FTP_SERVER: ${{ secrets.FTP_SERVER }}
           FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
           FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+          FTP_PORT: ${{ secrets.FTP_PORT }}
           FTP_REMOTE_DIR: ${{ secrets.FTP_REMOTE_DIR }}
         run: |
-          sudo apt-get install -y lftp netcat-openbsd
+          sudo apt-get install -y lftp
 
-          echo "====== PORT REACHABILITY ======"
-          echo "--- Port 21 (FTP) ---"
-          nc -zv -w5 $FTP_SERVER 21 2>&1 || true
-          echo "--- Port 22 (SSH/SFTP) ---"
-          nc -zv -w5 $FTP_SERVER 22 2>&1 || true
-          echo "--- Port 2222 (alt SFTP) ---"
-          nc -zv -w5 $FTP_SERVER 2222 2>&1 || true
-
-          echo ""
-          echo "====== SFTP TEST (lftp, debug 5) ======"
+          # Hoststar requires TLS on the control channel (plain FTP is rejected).
+          # The data channel must be plain/clear (PROT C) because GitHub Actions
+          # cannot reach the encrypted data channel ports through Hoststar's firewall.
+          # ftp:ssl-protect-data no → sends "PROT C" → plain data channel
+          # ftp:ssl-protect-list no → plain channel for directory listings too
           python3 - << 'PYEOF'
           import os
           s = os.environ['FTP_SERVER']
+          p = os.environ['FTP_PORT']
           u = os.environ['FTP_USERNAME']
           w = os.environ['FTP_PASSWORD']
           d = os.environ['FTP_REMOTE_DIR']
           script = (
-            "debug 5\n"
-            "set sftp:auto-confirm yes\n"
-            "set net:timeout 10\n"
-            "set net:max-retries 1\n"
-            f"open sftp://{u}:{w}@{s}:22\n"
-            "ls\n"
+            "set ftp:ssl-allow yes\n"           # TLS on control channel (required by server)
+            "set ftp:ssl-force yes\n"           # require TLS
+            "set ssl:verify-certificate no\n"   # ignore self-signed cert
+            "set ftp:ssl-protect-data no\n"     # plain data channel (PROT C)
+            "set ftp:ssl-protect-list no\n"     # plain channel for directory listings
+            "set ftp:passive-mode yes\n"        # passive mode
+            "set ftp:fix-pasv-address yes\n"    # fix PASV responses with private IPs
+            "set ftp:prefer-epsv no\n"          # use PASV not EPSV
+            "set net:timeout 30\n"
+            "set net:max-retries 3\n"
+            "set net:reconnect-interval-base 5\n"
+            f"open ftp://{s}:{p}\n"
+            f"user {u} {w}\n"
+            f"mirror -R --delete --verbose ./dist/ {d}\n"
             "quit\n"
           )
-          with open('/tmp/diag_sftp.lftp', 'w') as f:
+          with open('/tmp/deploy.lftp', 'w') as f:
             f.write(script)
           PYEOF
-          lftp -f /tmp/diag_sftp.lftp 2>&1 || true
 
-          echo ""
-          echo "====== FTP TEST (lftp, plain, debug 5) ======"
-          python3 - << 'PYEOF'
-          import os
-          s = os.environ['FTP_SERVER']
-          u = os.environ['FTP_USERNAME']
-          w = os.environ['FTP_PASSWORD']
-          d = os.environ['FTP_REMOTE_DIR']
-          script = (
-            "debug 5\n"
-            "set ftp:ssl-allow no\n"
-            "set ftp:passive-mode yes\n"
-            "set ftp:fix-pasv-address yes\n"
-            "set net:timeout 10\n"
-            "set net:max-retries 1\n"
-            f"open ftp://{u}:{w}@{s}:21\n"
-            "ls\n"
-            "quit\n"
-          )
-          with open('/tmp/diag_ftp.lftp', 'w') as f:
-            f.write(script)
-          PYEOF
-          lftp -f /tmp/diag_ftp.lftp 2>&1 || true
-
-          echo ""
-          echo "====== REMOTE DIR VALUE ======"
-          echo "FTP_REMOTE_DIR = '$FTP_REMOTE_DIR'"
+          lftp -f /tmp/deploy.lftp
+          rm -f /tmp/deploy.lftp
