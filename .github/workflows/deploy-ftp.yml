@@ -53,10 +53,7 @@ jobs:
           w = os.environ['FTP_PASSWORD']
           d = os.environ['FTP_REMOTE_DIR']
           script = (
-            "set ftp:ssl-allow yes\n"          # TLS on control channel
-            "set ftp:ssl-force no\n"           # fall back if TLS fails
-            "set ftp:ssl-data-policy clear\n"  # plain FTP for data channel (fixes firewall issues)
-            "set ssl:verify-certificate no\n"  # ignore self-signed certs
+            "set ftp:ssl-allow no\n"           # plain FTP – no TLS (avoids data channel firewall issues)
             "set ftp:passive-mode yes\n"       # passive mode
             "set net:timeout 30\n"
             "set net:max-retries 3\n"
