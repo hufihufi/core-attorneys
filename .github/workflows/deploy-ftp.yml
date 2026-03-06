@@ -34,7 +34,7 @@ jobs:
           echo "Pages built: $(find dist -name '*.html' | wc -l)"
           echo "Build size: $(du -sh dist/ | cut -f1)"
 
-      - name: Deploy via FTPS (lftp)
+      - name: Deploy via FTPS (Python ftplib)
         env:
           FTP_SERVER: ${{ secrets.FTP_SERVER }}
           FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
@@ -42,40 +42,60 @@ jobs:
           FTP_PORT: ${{ secrets.FTP_PORT }}
           FTP_REMOTE_DIR: ${{ secrets.FTP_REMOTE_DIR }}
         run: |
-          sudo apt-get install -y lftp
-
-          # Hoststar requires TLS on the control channel (plain FTP is rejected).
-          # The data channel must be plain/clear (PROT C) because GitHub Actions
-          # cannot reach the encrypted data channel ports through Hoststar's firewall.
-          # ftp:ssl-protect-data no → sends "PROT C" → plain data channel
-          # ftp:ssl-protect-list no → plain channel for directory listings too
+          # Python ftplib.FTP_TLS gives full debug output (every FTP command + response)
+          # and raises clear exceptions at the exact failure point.
           python3 - << 'PYEOF'
-          import os
-          s = os.environ['FTP_SERVER']
-          p = os.environ['FTP_PORT']
-          u = os.environ['FTP_USERNAME']
-          w = os.environ['FTP_PASSWORD']
-          d = os.environ['FTP_REMOTE_DIR']
-          script = (
-            "set ftp:ssl-allow yes\n"           # TLS on control channel (required by server)
-            "set ftp:ssl-force yes\n"           # require TLS
-            "set ssl:verify-certificate no\n"   # ignore self-signed cert
-            "set ftp:ssl-protect-data no\n"     # plain data channel (PROT C)
-            "set ftp:ssl-protect-list no\n"     # plain channel for directory listings
-            "set ftp:passive-mode yes\n"        # passive mode
-            "set ftp:fix-pasv-address yes\n"    # fix PASV responses with private IPs
-            "set ftp:prefer-epsv no\n"          # use PASV not EPSV
-            "set net:timeout 30\n"
-            "set net:max-retries 3\n"
-            "set net:reconnect-interval-base 5\n"
-            f"open ftp://{s}:{p}\n"
-            f"user {u} {w}\n"
-            f"mirror -R --delete --verbose ./dist/ {d}\n"
-            "quit\n"
-          )
-          with open('/tmp/deploy.lftp', 'w') as f:
-            f.write(script)
-          PYEOF
+          import ftplib, os, pathlib, ssl, sys
 
-          lftp -f /tmp/deploy.lftp
-          rm -f /tmp/deploy.lftp
+          server = os.environ['FTP_SERVER']
+          port   = int(os.environ['FTP_PORT'])
+          user   = os.environ['FTP_USERNAME']
+          passwd = os.environ['FTP_PASSWORD']
+          remote = os.environ['FTP_REMOTE_DIR']
+
+          # Unverified SSL context – Hoststar may use a self-signed cert
+          ctx = ssl.create_default_context()
+          ctx.check_hostname = False
+          ctx.verify_mode = ssl.CERT_NONE
+
+          ftp = ftplib.FTP_TLS(context=ctx)
+          ftp.set_debuglevel(2)  # print every FTP command + server response
+
+          print(f"==> Connecting to {server}:{port}")
+          ftp.connect(server, port, timeout=30)
+
+          print("==> Sending AUTH TLS (explicit FTPS)")
+          ftp.auth()
+
+          print(f"==> Logging in as {user}")
+          ftp.login(user, passwd)
+
+          print("==> Sending PROT C (plain data channel)")
+          ftp.prot_c()
+          ftp.set_pasv(True)
+
+          print(f"==> CWD to {remote}")
+          ftp.cwd(remote)
+
+          print("==> LIST (data channel test)")
+          ftp.retrlines('LIST')
+
+          def upload(ftp, local, rbase):
+              for item in sorted(pathlib.Path(local).iterdir()):
+                  rpath = rbase.rstrip('/') + '/' + item.name
+                  if item.is_dir():
+                      try:
+                          ftp.mkd(rpath)
+                      except ftplib.error_perm:
+                          pass  # directory already exists
+                      upload(ftp, item, rpath)
+                  else:
+                      print(f"  PUT {item} -> {rpath}")
+                      with open(item, 'rb') as f:
+                          ftp.storbinary(f'STOR {rpath}', f)
+
+          print("==> Uploading ./dist/")
+          upload(ftp, './dist', remote)
+          ftp.quit()
+          print("==> Deployment complete")
+          PYEOF
