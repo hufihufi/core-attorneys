@@ -34,33 +34,30 @@ jobs:
           echo "Pages built: $(find dist -name '*.html' | wc -l)"
           echo "Build size: $(du -sh dist/ | cut -f1)"
 
-      - name: Deploy via LFTP
+      - name: Deploy via SFTP (lftp)
         env:
           FTP_SERVER: ${{ secrets.FTP_SERVER }}
           FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
           FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
-          FTP_PORT: ${{ secrets.FTP_PORT }}
           FTP_REMOTE_DIR: ${{ secrets.FTP_REMOTE_DIR }}
         run: |
           sudo apt-get install -y lftp
 
           # Write lftp script via Python to safely handle special chars in credentials
+          # SFTP (SSH) uses a single connection on port 22 – no separate data channel,
+          # no PASV/firewall issues, standard for CI/CD deployments to shared hosting
           python3 - << 'PYEOF'
           import os
           s = os.environ['FTP_SERVER']
-          p = os.environ['FTP_PORT']
           u = os.environ['FTP_USERNAME']
           w = os.environ['FTP_PASSWORD']
           d = os.environ['FTP_REMOTE_DIR']
           script = (
-            "set ftp:ssl-allow no\n"           # plain FTP – no TLS
-            "set ftp:passive-mode yes\n"       # passive mode
-            "set ftp:fix-pasv-address yes\n"   # ignore private IP in PASV response (common on shared hosting)
-            "set ftp:prefer-epsv no\n"         # use PASV not EPSV
+            "set sftp:auto-confirm yes\n"      # accept host key without interactive prompt
             "set net:timeout 30\n"
             "set net:max-retries 3\n"
             "set net:reconnect-interval-base 5\n"
-            f"open ftp://{s}:{p}\n"
+            f"open sftp://{s}:22\n"
             f"user {u} {w}\n"
             f"mirror -R --delete --verbose ./dist/ {d}\n"
             "quit\n"
