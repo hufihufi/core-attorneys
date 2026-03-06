@@ -41,6 +41,7 @@ jobs:
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           port: ${{ secrets.FTP_PORT }}
-          protocol: ftps
+          protocol: ftps-legacy
+          security: loose
           local-dir: ./dist/
           server-dir: ${{ secrets.FTP_REMOTE_DIR }}
