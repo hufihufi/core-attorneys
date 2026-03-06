@@ -53,8 +53,10 @@ jobs:
           w = os.environ['FTP_PASSWORD']
           d = os.environ['FTP_REMOTE_DIR']
           script = (
-            "set ftp:ssl-allow no\n"           # plain FTP – no TLS (avoids data channel firewall issues)
+            "set ftp:ssl-allow no\n"           # plain FTP – no TLS
             "set ftp:passive-mode yes\n"       # passive mode
+            "set ftp:fix-pasv-address yes\n"   # ignore private IP in PASV response (common on shared hosting)
+            "set ftp:prefer-epsv no\n"         # use PASV not EPSV
             "set net:timeout 30\n"
             "set net:max-retries 3\n"
             "set net:reconnect-interval-base 5\n"
